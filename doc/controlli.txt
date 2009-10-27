@@ -1,0 +1,44 @@
+Ieri ho parlato con il milanese: mi invia i soldi per fare il prototipo della 
+pedana.
+
+Ingressi:
+- fotocellula presenza pallina su T (supporto in gomma)
+- 
+fotocellula per regolazione altezza T
+- sensore (microswitch) per posizione 
+tutto basso vite senza fine
+- sensore (microswitch) presenza palline nel 
+caricatore
+- sensore (microswitch) per posizione tutto alto vite senza fine 
+(opzionale)
+
+Uscite:
+- direzione motore
+- impulsi motore
+- led mancanza 
+palline/segnalazione taratura altezza zero
+
+Bye
+
+>----Messaggio originale----
+
+>Da: e.rossi@tecnobrain.com
+>Data: 20/10/2009 12.50
+>A: "Andrea Marabini"
+<marabo@libero.it>
+>Ogg: pedana golf
+>
+>MI riassumi con calma l'elenco dei 
+sensori/motori?
+>Bye
+>E.
+>
+>-- 
+>GPG Key: 1024D/4F9ED407 2007-09-18 Enrico 
+Rossi <e.rossi@tecnobrain.com>
+>Cell: +393389064702 - XMPP: erossi@jabber.linux.
+it
+>Skype: tecnobrain (+390510547889)
+>
+
+
