@@ -1,5 +1,5 @@
 MCU = atmega16
-INC = -I/usr/avr/include/
+INC = -I /usr/lib/avr/include
 LIBS = m
 OPTLEV = s
 export CFLAGS = $(INC) -Wall -Wstrict-prototypes -pedantic -mmcu=$(MCU) -O$(OPTLEV)
@@ -13,28 +13,30 @@ SIZE = avr-size
 DUDE = avrdude -c stk500v1 -p $(MCU) -P /dev/ttyUSB0 -e -U flash:w:$(PRGNAME).hex
 REMOVE = rm -f
 objects =
-SUBDIRS = src
+SRCDIR = src
+TESTDIR = test
 
-.PHONY: clean indent $(SUBDIRS)
+.PHONY: clean indent $(SRCDIR) $(TESTDIR)
 .SILENT: help
 .SUFFIXES: .c, .o
 
-all: $(SUBDIRS)
+all: $(SRCDIR)
 	$(OBJCOPY) $(PRGNAME).elf $(PRGNAME).hex
 
 program:
 	$(DUDE)
 
-$(SUBDIRS):
+$(SRCDIR):
 	@echo $(MAKECMDGOALS)
 	$(MAKE) -C $@ $(MAKECMDGOALS)
 
-test_uart: $(SUBDIRS)
+$(TESTDIR):
+	@echo $(MAKECMDGOALS)
+	$(MAKE) -C $@ $(MAKECMDGOALS)
+
+test_engine: $(TESTDIR)
 	$(OBJCOPY) $(PRGNAME).elf $(PRGNAME).hex
 
-clean: $(SUBDIRS)
+clean: $(SRCDIR) $(TESTDIR)
 	$(REMOVE) $(PRGNAME).elf $(PRGNAME).hex
-
-indent: $(SUBDIRS)
-	indent *.c *.h
 
