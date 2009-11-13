@@ -24,11 +24,11 @@
 #include "engine.h"
 
 int main (void) {
-	engine_init();
-
-	/* must output the OC0 port PB3 on Mega16*/
+	/* general port setup */
 	PORTB = 0;
-	DDRB = _BV(PB3);
+	DDRB = 0;
+	/* must output the OC0 port PB3 on Mega16*/
+	engine_init();
 
 	/* compare match to the top, max slow speed */
 	OCR0 = 100;
