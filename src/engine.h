@@ -22,10 +22,11 @@
 #define STM_ENGINE_H_
 
 /* Control port and bit */
-#define STM_CTRL_PORT PORTA
-#define STM_CTRL_DDR DDRA
-#define STM_PIN_ENABLE 0 /* 1 enable the engine */
-#define STM_PIN_UPDOWN 1 /* 1 go up */
+#define STM_CTRL_PORT PORTB
+#define STM_CTRL_DDR DDRB
+#define STM_CTRL_CLK 3 /* PB3: clk engine OC0 unchangable */
+#define STM_PIN_UPDOWN 4 /* PB4: up 1, down 0 */
+#define STM_PIN_ENABLE 5 /* PB5: 1 enable the engine */
 
 #define ENGINE_DELAY_MS 100 /* delay from enable engine and start moving */
 

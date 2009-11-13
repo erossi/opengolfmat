@@ -33,6 +33,17 @@ void engine_stop(void) {
 	STM_CTRL_PORT &= ~_BV(STM_PIN_ENABLE);
 }
 
+/* reverse logic: remove when the electronic has been fixed
+void engine_start(void) {
+	STM_CTRL_PORT &= ~_BV(STM_PIN_ENABLE);
+	_delay_ms(ENGINE_DELAY_MS);
+}
+void engine_stop(void) {
+	_delay_ms(ENGINE_DELAY_MS);
+	STM_CTRL_PORT |= _BV(STM_PIN_ENABLE);
+}
+*/
+
 void engine_set_direction(const unsigned short int updown) {
 	if (updown)
 		STM_CTRL_PORT |= _BV(STM_PIN_UPDOWN); /* up */
@@ -41,7 +52,11 @@ void engine_set_direction(const unsigned short int updown) {
 }
 
 void engine_init(void) {
+	uint8_t data;
+
+	data = _BV(STM_CTRL_CLK) | _BV(STM_PIN_ENABLE) | _BV(STM_PIN_UPDOWN);
+	STM_CTRL_PORT &= ~(data);
 	/* Direction PIN out */
-	STM_CTRL_DDR |= _BV(STM_PIN_ENABLE) | _BV(STM_PIN_UPDOWN);
+	STM_CTRL_DDR |= data;
 }
 
