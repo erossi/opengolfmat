@@ -36,24 +36,6 @@ so we have 4Mhz CPU, maximum is 65ms. (65.535 actually).
 Over this range you loose precision.
 */
 
-struct stmotor_t {
-	/* bit flags */
-	volatile uint8_t flags;
-
-	/* absolute value of steps taken */
-	/* can be negative before calibration or on an
-	   uncalibrated situation */
-	/* should not be volatile, please FIX */
-	volatile int abs_position;
-
-	/* used in interrupt */
-	volatile unsigned int rel_position;
-
-	/* top counter after calibration */
-	unsigned int abs_top;
-
-};
-
 /* ---- serial port ---- */
 
 #define UART_HAVE_DEFAULT
