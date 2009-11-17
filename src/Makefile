@@ -10,10 +10,7 @@ CC = avr-gcc
 REMOVE = rm -f
 
 init_obj = init.o
-engine_obj = engine.o
-stmotor_obj = stepping_motor.o $(engine_obj)
-phone_obj = cell.o uart_isr.o uart.o 
-synth_obj = sht11.o init.o adc.o anemometer.o synth.o davis.o
+stmotor_obj = engine.o switch.o counter.o stepping_motor.o
 objects = $(stmotor_obj)
 
 .PHONY: clean indent

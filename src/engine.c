@@ -52,11 +52,8 @@ void engine_set_direction(const unsigned short int updown) {
 }
 
 void engine_init(void) {
-	uint8_t data;
-
-	data = _BV(STM_CTRL_CLK) | _BV(STM_PIN_ENABLE) | _BV(STM_PIN_UPDOWN);
-	STM_CTRL_PORT &= ~(data);
+	STM_CTRL_PORT &= ~(_BV(STM_CTRL_CLK) | _BV(STM_PIN_ENABLE) | _BV(STM_PIN_UPDOWN));
 	/* Direction PIN out */
-	STM_CTRL_DDR |= data;
+	STM_CTRL_DDR |= _BV(STM_CTRL_CLK) | _BV(STM_PIN_ENABLE) | _BV(STM_PIN_UPDOWN);
 }
 

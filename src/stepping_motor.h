@@ -30,23 +30,13 @@ Set the prescaler used for the timer.
  */
 
 #define TIMER_PRESCALER_64
-#define USEC_DELAY_LOOP 100 /* usec delay for while cycle waiting for steps */
 
 /* Volatile stuff, used into ISR */
-
+/* struct stmotor_t flag */
 #define STM_STEP 0 /* bit 0: compare match, a new step has been done */
 #define STM_UPDOWN 1 /* bit 1: go up (1) or down (0) */
-#define STM_SW_CALIB 3 /* require calibration */
-#define STM_SW_BBNE 4 /* ball basket not empty */
-#define STM_SW_BRDY 5 /* ball loaded and ready switch */
-#define STM_SW_BTM 6 /* bottom switch hit */
-#define STM_SW_TOP 7 /* top switch hit */
-
-/* Accelleration and decelleration top and bottom */
-#define STM_TOP_COMPARE 100
-#define STM_BOTTOM_COMPARE 30
-#define STM_ACCDEC_STEP 1 /* unused */
-#define STM_STARTSTOP_STEPS 70 /* TOP - BOTTOM */
+#define STM_ALLARM 2 /* allarm stop the engine */
+#define STM_CALIBRATE 3 /* require calibration */
 
 struct stmotor_t {
 	/* bit flags */
@@ -61,11 +51,19 @@ struct stmotor_t {
 	/* used in interrupt */
 	volatile unsigned int rel_position;
 
-	/* top counter after calibration */
-	unsigned int abs_top;
+	/* counter after calibration */
+	/* zero - the level of the mat */
+	/* top - the level when hits the top switch */
+	unsigned int zero, top;
+
+	/* levels ready for the player */
+	unsigned int low_level, mid_level, high_level;
+	
+	/* personal player's level, adjusted by hand */
+	unsigned int player_level;
 };
 
-void stmotor_go_to(const int abs_position, struct stmotor_t *stmotor);
-void stmotor_init(struct stmotor_t *stmotor);
+void stmotor_go_to(const int abs_position);
+void stmotor_init(void);
 
 #endif

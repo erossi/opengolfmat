@@ -35,16 +35,16 @@ int main (void) {
 	PORTB = 0;
 	DDRB = 0;
 	/* must output the OC0 port PB3 on Mega16*/
-	stmotor_init(stmotor);
+	stmotor_init();
 
 	sei();
 
 	for (;;) {
-		stmotor_go_to(400, stmotor);
+		stmotor_go_to(400);
 		_delay_ms(1000);
-		stmotor_go_to(800, stmotor);
+		stmotor_go_to(800);
 		_delay_ms(1000);
-		stmotor_go_to(900, stmotor);
+		stmotor_go_to(900);
 		_delay_ms(1000);
 	}
 

@@ -13,7 +13,7 @@
 
 init_obj = init.o
 test_engine_obj = engine.o
-test_stmotor_obj = $(test_engine_obj) stepping_motor.o
+test_stmotor_obj = engine.o switch.o counter.o stepping_motor.o
 objects = $(test_stmotor_obj)
 
 .PHONY: clean indent
@@ -25,6 +25,12 @@ all: $(objects)
 
 engine.o:
 	$(CC) $(CFLAGS) -c $(SRCDIR)/engine.c
+
+switch.o:
+	$(CC) $(CFLAGS) -c $(SRCDIR)/switch.c
+
+counter.o:
+	$(CC) $(CFLAGS) -c $(SRCDIR)/counter.c
 
 stepping_motor.o:
 	$(CC) $(CFLAGS) -c $(SRCDIR)/stepping_motor.c
