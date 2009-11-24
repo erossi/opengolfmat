@@ -131,7 +131,26 @@ void stmotor_force_run_for_x_steps(unsigned int steps)
 	update_step_counter();
 }
 
+/* 1 up, 0 down */
+void set_direction(const unsigned short int dir)
+{
+	if (dir)
+		stmotor->flags |= _BV(STM_UPDOWN); /* go up */
+	else
+		stmotor->flags &= ~_BV(STM_UPDOWN); /* go down */
+
+	engine_set_direction(dir);
+}
+
 /*
+void calibrate_bottom(void)
+{
+	hit_bottom();
+	set_direction(1);
+	stmotor_force_run_for_x_steps(100);
+	
+}
+
 uint8_t calibrate(void)
 {
 	uint8_t error = 0;
@@ -163,14 +182,13 @@ void stmotor_go_to(const int abs_position)
 	remaining_steps = (abs_position - stmotor->abs_position);
 
 	/* first decide updown */
-	if ( remaining_steps > 0) {
-		stmotor->flags |= _BV(STM_UPDOWN); /* go up */
-	} else {
-		stmotor->flags &= ~_BV(STM_UPDOWN); /* go down */
+	if ( remaining_steps > 0)
+		set_direction(1); /* go up */
+	else {
+		set_direction(0); /* go down */
 		remaining_steps = -remaining_steps;
 	}
 
-	engine_set_direction(stmotor->flags & _BV(STM_UPDOWN));
 	counter_slow_speed();
 	engine_start();
 	counter_start();
