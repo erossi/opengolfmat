@@ -48,12 +48,20 @@ void update_step_counter(void)
 		stmotor->abs_position -= stmotor->rel_position; /* down */
 }
 
+unsigned short int sw_allarm(void)
+{
+	if (sw_hit_top() || sw_hit_bottom() || (stmotor->flags & _BV(STM_ALLARM)))
+		return(1);
+	else
+		return(0);
+}
+
 ISR(INT0_vect)
 {
 	counter_stop();
 	engine_stop();
 	update_step_counter();
-	stmotor->flags |= _BV(SW_ALLARM);
+	stmotor->flags |= _BV(STM_ALLARM);
 	sw_allarm_irq(0); /* disable myself */
 }
 
@@ -111,7 +119,7 @@ uint8_t run_for_x_steps(unsigned int steps)
 	if (!sw_allarm()) {
 		stmotor->rel_position = 0;
 
-		while ((stmotor->rel_position < steps) || sw_allarm())
+		while ((stmotor->rel_position < steps) && !sw_allarm())
 			_delay_us(COUNTER_DELAY_LOOP);
 
 		update_step_counter();

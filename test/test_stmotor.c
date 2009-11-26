@@ -40,12 +40,15 @@ int main (void) {
 	sei();
 
 	for (;;) {
-		stmotor_go_to(400);
+		stmotor_go_to(1200);
 		_delay_ms(1000);
-		stmotor_go_to(800);
+		stmotor->flags = 0;
+		stmotor_go_to(2400);
 		_delay_ms(1000);
-		stmotor_go_to(900);
+		stmotor->flags = 0;
+		stmotor_go_to(2500);
 		_delay_ms(1000);
+		stmotor->flags = 0;
 	}
 
 	cli();

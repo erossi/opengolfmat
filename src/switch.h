@@ -31,11 +31,8 @@
 #define SW_PIN_BOTTOM 3 /* PCX: bottom switch hit */
 #define SW_PIN_USERMODE 4 /* user switch */
 
-/* switch flags bits mostly negate the input pin */
-#define SW_ALLARM 0 /* One of the top or bottom has been hit */
-#define SW_CALIB 1 /* require calibration */
-
-unsigned short int sw_allarm(void);
+unsigned short int sw_hit_top(void);
+unsigned short int sw_hit_bottom(void);
 unsigned short int sw_user_switch(void);
 void sw_allarm_irq(const unsigned short int f);
 void sw_init(void);

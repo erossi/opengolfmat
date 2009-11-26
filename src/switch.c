@@ -22,28 +22,22 @@
 #include <avr/interrupt.h>
 #include "switch.h"
 
+/* Reverse logic, see electrical chart */
+/* GND means switch has been hit */
 unsigned short int sw_hit_top(void)
 {
 	if (SW_PIN & _BV(SW_PIN_TOP))
-		return(1);
-	else
 		return(0);
+	else
+		return(1);
 }
 
 unsigned short int sw_hit_bottom(void)
 {
 	if (SW_PIN & _BV(SW_PIN_BOTTOM))
-		return(1);
-	else
 		return(0);
-}
-
-unsigned short int sw_allarm(void)
-{
-	if (sw_hit_top() || sw_hit_bottom())
-		return(1);
 	else
-		return(0);
+		return(1);
 }
 
 unsigned short int sw_ball_loader_empty(void)
@@ -73,7 +67,7 @@ unsigned short int sw_user_switch(void)
 
 unsigned short int sw_check_flags(void)
 {
-	if (sw_allarm() || sw_ball_loader_empty() || sw_ball_on_the_launcher())
+	if (sw_hit_top() || sw_hit_bottom() || sw_ball_loader_empty() || sw_ball_on_the_launcher())
 		return(1);
 	else
 		return(0);
