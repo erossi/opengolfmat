@@ -46,6 +46,8 @@ void update_step_counter(void)
 		stmotor->abs_position += stmotor->rel_position; /* up */
 	else
 		stmotor->abs_position -= stmotor->rel_position; /* down */
+
+	stmotor->rel_position = 0;
 }
 
 unsigned short int sw_allarm(void)
