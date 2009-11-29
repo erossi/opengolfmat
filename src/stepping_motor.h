@@ -37,6 +37,7 @@ Set the prescaler used for the timer.
 #define STM_UPDOWN 1 /* bit 1: go up (1) or down (0) */
 #define STM_ALLARM 2 /* allarm stop the engine */
 #define STM_CALIBRATE 3 /* require calibration */
+#define STM_UNKNOWN 7 /* Something bad happens, stop everything and crash */
 
 struct stmotor_t {
 	/* bit flags */
@@ -63,6 +64,8 @@ struct stmotor_t {
 	unsigned int player_level;
 };
 
+void stmotor_exit_from_switch(void);
+void stmotor_slow_check_zero(void);
 void stmotor_go_to(const int abs_position);
 void stmotor_init(void);
 

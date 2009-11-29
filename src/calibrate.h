@@ -18,22 +18,19 @@
    Enrico Rossi <e.rossi@tecnobrain.com>
  */
 
-#ifndef COUNTER_H_
-#define COUNTER_H_
+#ifndef CALIBRATE_H_
+#define CALIBRATE_H_
 
-/* usec delay for while cycle waiting for steps */
-#define COUNTER_DELAY_LOOP 100
+/* Number of steps to go backward when we hit a switch */
+/* Must be less than COUNTER_STARTSTOP_STEPS */
+#define CAL_BACKSTEPS 100
 
-/* Accelleration and decelleration top and bottom */
-#define COUNTER_TOP_COMPARE 100
-#define COUNTER_BOTTOM_COMPARE 30
+/* Maximum number of steps */
+#define CAL_MAXSTEPS 20000
 
-/* Accellerate/decellerate treshold. Has to be more than 2 * TOP - BOTTOM */
-#define COUNTER_STARTSTOP_STEPS 140
-
-void counter_start(void);
-void counter_stop(void);
-void counter_slow_speed(void);
-void counter_high_speed(void);
+void calibrate_init(void);
+void calibrate_bottom(void);
+void calibrate_bottom_and_top(void);
+void calibrate_zero(void);
 
 #endif

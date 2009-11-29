@@ -14,7 +14,8 @@
 init_obj = init.o
 test_engine_obj = engine.o
 test_stmotor_obj = engine.o switch.o counter.o stepping_motor.o
-objects = $(test_stmotor_obj)
+test_calibrate_obj = $(test_stmotor_obj) calibrate.o
+objects = $(test_calibrate_obj)
 
 .PHONY: clean indent
 .SILENT: help
@@ -35,6 +36,9 @@ counter.o:
 stepping_motor.o:
 	$(CC) $(CFLAGS) -c $(SRCDIR)/stepping_motor.c
 
+calibrate.o:
+	$(CC) $(CFLAGS) -c $(SRCDIR)/calibrate.c
+
 uart.o:
 	$(CC) $(CFLAGS) -D TXRXI -c uart.c
 	 
@@ -43,6 +47,9 @@ test_engine: $(test_engine_obj)
 
 test_stmotor: $(test_stmotor_obj)
 	$(CC) $(CFLAGS) -o ../ogmat.elf test_stmotor.c $(test_stmotor_obj) $(LFLAGS)
+
+test_calibrate: $(test_calibrate_obj)
+	$(CC) $(CFLAGS) -o ../ogmat.elf test_calibrate.c $(test_calibrate_obj) $(LFLAGS)
 
 test_uart: $(objects)
 	$(CC) $(CFLAGS) -o ../sint.elf test_uart.c $(objects) $(LFLAGS)

@@ -40,6 +40,11 @@ unsigned short int sw_hit_bottom(void)
 		return(1);
 }
 
+unsigned short int sw_hit(void)
+{
+	return(sw_hit_bottom() | sw_hit_top());
+}
+
 unsigned short int sw_ball_loader_empty(void)
 {
 	if (SW_PIN & _BV(SW_PIN_LOADER))

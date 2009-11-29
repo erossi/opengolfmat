@@ -33,6 +33,7 @@
 
 unsigned short int sw_hit_top(void);
 unsigned short int sw_hit_bottom(void);
+unsigned short int sw_hit(void);
 unsigned short int sw_user_switch(void);
 void sw_allarm_irq(const unsigned short int f);
 void sw_init(void);

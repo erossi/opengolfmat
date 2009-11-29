@@ -43,6 +43,9 @@ test_engine: $(TESTDIR)
 test_stmotor: $(TESTDIR)
 	$(OBJCOPY) $(PRGNAME).elf $(PRGNAME).hex
 
+test_calibrate: $(TESTDIR)
+	$(OBJCOPY) $(PRGNAME).elf $(PRGNAME).hex
+
 clean: $(SRCDIR) $(TESTDIR)
 	$(REMOVE) $(PRGNAME).elf $(PRGNAME).hex
 
