@@ -28,6 +28,9 @@
 /* Maximum number of steps */
 #define CAL_MAXSTEPS 20000
 
+/* number of steps between 1/3 2/3 and 3/3 */
+#define CAL_INTERMEDIATE_STEPS 100
+
 void calibrate_init(void);
 void calibrate_bottom(void);
 void calibrate_bottom_and_top(void);

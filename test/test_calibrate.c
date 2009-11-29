@@ -39,7 +39,7 @@ int main (void) {
 
 	sei();
 
-	calibrate_bottom_and_top();
+	calibrate_zero();
 	_delay_ms(1000);
 	stmotor->flags = 0;
 
@@ -47,7 +47,13 @@ int main (void) {
 		stmotor_go_to(0);
 		_delay_ms(1000);
 		stmotor->flags = 0;
+		stmotor_go_to(stmotor->zero);
+		_delay_ms(1000);
+		stmotor->flags = 0;
 		stmotor_go_to(stmotor->top);
+		_delay_ms(1000);
+		stmotor->flags = 0;
+		stmotor_go_to(stmotor->zero);
 		_delay_ms(1000);
 		stmotor->flags = 0;
 	}

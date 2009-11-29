@@ -174,7 +174,7 @@ void stmotor_slow_check_zero(void)
 		engine_start();
 		counter_start();
 
-		while (sw_user_switch())
+		while (sw_user_switch() && !hit_limit_allarm())
 			_delay_us(COUNTER_DELAY_LOOP);
 
 		update_abs_position();

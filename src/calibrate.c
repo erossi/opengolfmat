@@ -49,6 +49,9 @@ void calibrate_zero(void)
 	calibrate_bottom_and_top();
 	stmotor_slow_check_zero();
 	stmotor->zero=stmotor->abs_position;
+	stmotor->low_level = stmotor->zero + CAL_INTERMEDIATE_STEPS;
+	stmotor->mid_level = stmotor->low_level + CAL_INTERMEDIATE_STEPS;
+	stmotor->high_level = stmotor->mid_level + CAL_INTERMEDIATE_STEPS;
 }
 
 /*
