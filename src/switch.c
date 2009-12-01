@@ -20,6 +20,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <util/delay.h>
 #include "switch.h"
 
 /* Reverse logic, see electrical chart */
@@ -45,16 +46,16 @@ unsigned short int sw_hit(void)
 	return(sw_hit_bottom() | sw_hit_top());
 }
 
-unsigned short int sw_ball_loader_empty(void)
+unsigned short int sw_ball_on_the_loader(void)
 {
 	if (SW_PIN & _BV(SW_PIN_LOADER))
-		return(0);
-	else
 		return(1);
+	else
+		return(0);
 }
 
 /* Ball on the launcher */
-unsigned short int sw_ball_on_the_launcher(void)
+unsigned short int sw_ball_on_the_T(void)
 {
 	if (SW_PIN & _BV(SW_PIN_BALLOK))
 		return(1);
@@ -72,7 +73,7 @@ unsigned short int sw_user_switch(void)
 
 unsigned short int sw_check_flags(void)
 {
-	if (sw_hit_top() || sw_hit_bottom() || sw_ball_loader_empty() || sw_ball_on_the_launcher())
+	if (sw_hit_top() || sw_hit_bottom() || sw_ball_on_the_loader() || sw_ball_on_the_T() || sw_user_switch())
 		return(1);
 	else
 		return(0);
@@ -85,6 +86,39 @@ void sw_allarm_irq(const unsigned short int f)
 		GICR |= _BV(INT0); /* enable INT0 */
 	else
 		GICR &= ~_BV(INT0); /* disable INT0 */
+}
+
+void wait_until_ball_on_the_loader(void)
+{
+	while (!sw_ball_on_the_loader())
+		_delay_ms(1000);
+
+	_delay_ms(1000);
+
+	while (!sw_ball_on_the_loader())
+		_delay_ms(1000);
+}
+
+void wait_until_ball_on_the_T(void)
+{
+	while (!sw_ball_on_the_T())
+		_delay_ms(1000);
+
+	_delay_ms(1000);
+
+	while (!sw_ball_on_the_T())
+		_delay_ms(1000);
+}
+
+void wait_until_ball_is_gone(void)
+{
+	while (sw_ball_on_the_T())
+		_delay_ms(1000);
+
+	_delay_ms(1000);
+
+	while (sw_ball_on_the_T())
+		_delay_ms(1000);
 }
 
 void sw_init(void)

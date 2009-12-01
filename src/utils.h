@@ -18,22 +18,21 @@
    Enrico Rossi <e.rossi@tecnobrain.com>
  */
 
-#ifndef CALIBRATE_H_
-#define CALIBRATE_H_
+#ifndef UTILS_H
+#define UTILS_H
 
-/* Number of steps to go backward when we hit a switch */
-/* Must be less than COUNTER_STARTSTOP_STEPS */
-#define CAL_BACKSTEPS 100
+#define UTILS_SWITCH_PORT PORTB
+#define UTILS_SWITCH_DDR DDRB
+#define UTILS_SWITCH_PIN PIN0
+#define LED_PORT PORTB
+#define LED_PORT_DDR DDRB
+#define LED_GREEN_PIN PB6
+#define LED_RED_PIN PB7
 
-/* Maximum number of steps */
-#define CAL_MAXSTEPS 20000
-
-/* number of steps between 1/3 2/3 and 3/3 */
-#define CAL_INTERMEDIATE_STEPS 100
-
-void calibrate_init(void);
-void goto_bottom(void);
-void calibrate_bottom_and_top(void);
-void calibrate_zero(void);
+/* led 0 green, led 1 red */
+void led_blink(uint8_t num, const uint8_t led);
+void wait_for_click(void);
+uint8_t check_for_click(void);
+void util_init(void);
 
 #endif

@@ -12,20 +12,18 @@ REMOVE = rm -f
 init_obj = init.o
 stmotor_obj = engine.o switch.o counter.o stepping_motor.o
 calibrate_obj = $(stmotor_obj) calibrate.o
-objects = $(calibrate_obj)
+objects = $(calibrate_obj) utils.o
 
-.PHONY: clean indent
+.PHONY: clean
 .SILENT: help
 .SUFFIXES: .c, .o
 
 all: $(objects)
-	$(CC) $(CFLAGS) -o ../sint.elf main.c $(objects) $(LFLAGS)
+	$(CC) $(CFLAGS) -o ../ogmat.elf main.c $(objects) $(LFLAGS)
 
 uart.o:
 	$(CC) $(CFLAGS) -D TXRXI -c uart.c
 	 
 clean: $(SUBDIRS)
-	$(REMOVE) $(objects)
+	$(REMOVE) $(objects) main.o
 
-indent:
-	indent *.c *.h
