@@ -71,11 +71,11 @@ uint8_t check_for_click(void)
 
 void util_init(void)
 {
-	/* Switch in */
+	/* Switch in, no pullup */
 	UTILS_SWITCH_PORT &= ~_BV(UTILS_SWITCH_PIN);
 	UTILS_SWITCH_DDR &= ~_BV(UTILS_SWITCH_PIN);
 
-	/* no internel pullup */
+	/* led port out */
 	LED_PORT &= ~(_BV(LED_GREEN_PIN) | _BV(LED_RED_PIN));
-	LED_PORT |= _BV(LED_GREEN_PIN) | _BV(LED_RED_PIN);
+	LED_DDR |= _BV(LED_GREEN_PIN) | _BV(LED_RED_PIN);
 }
