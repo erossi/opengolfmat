@@ -44,6 +44,9 @@ void calibrate_bottom_and_top(void)
 	stmotor->top=stmotor->abs_position;
 }
 
+/* Set the level of the mat and calculate the low, mid and high
+   point of the launcher */
+
 void calibrate_zero(void)
 {
 	calibrate_bottom_and_top();

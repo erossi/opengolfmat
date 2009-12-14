@@ -50,7 +50,7 @@ void update_abs_position(void)
 	stmotor->rel_position = 0;
 }
 
-unsigned short int hit_limit_allarm(void)
+unsigned short int allarm_hit_limit(void)
 {
 	if (sw_hit() || (stmotor->flags & _BV(STM_ALLARM)))
 		return(1);
@@ -76,58 +76,8 @@ void loop_until_counter_match(void)
 {
 	clear_counter_match_flag_bit();
 
-	while (!(stmotor->flags & _BV(STM_STEP) || hit_limit_allarm()))
+	while (!(stmotor->flags & _BV(STM_STEP) || allarm_hit_limit()))
 		_delay_us(COUNTER_DELAY_LOOP);
-}
-
-uint8_t accellerate(void)
-{
-	uint8_t i;
-
-	if (!hit_limit_allarm()) {
-		stmotor->rel_position = 0;
-
-		for (i = COUNTER_TOP_COMPARE; i > COUNTER_BOTTOM_COMPARE; i--) {
-			loop_until_counter_match();
-			OCR0 = i;
-		}
-
-		update_abs_position(); /* adjust abs step counter */
-	}
-
-	return(hit_limit_allarm());
-}
-
-uint8_t decellerate(void)
-{
-	uint8_t i;
-
-	if (!hit_limit_allarm()) {
-		stmotor->rel_position = 0;
-
-		for (i = COUNTER_BOTTOM_COMPARE; i < COUNTER_TOP_COMPARE; i++) {
-			loop_until_counter_match();
-			OCR0 = i;
-		}
-
-		update_abs_position();
-	}
-
-	return(hit_limit_allarm());
-}
-
-uint8_t run_for_x_steps(unsigned int steps)
-{
-	if (!hit_limit_allarm()) {
-		stmotor->rel_position = 0;
-
-		while ((stmotor->rel_position < steps) && !hit_limit_allarm())
-			_delay_us(COUNTER_DELAY_LOOP);
-
-		update_abs_position();
-	}
-
-	return(hit_limit_allarm());
 }
 
 /* 1 up, 0 down */
@@ -141,6 +91,70 @@ void set_direction(const unsigned short int dir)
 	engine_set_direction(dir);
 }
 
+/* start moving slowly */
+void stm_start(void) {
+	counter_slow_speed(); /* set slow speed */
+	engine_start(); /* energize the motor */
+	counter_start(); /* start */
+}
+
+/* stop now */
+void stm_stop(void) {
+	counter_stop(); /* stop */
+	engine_stop(); /* shutdown the motor */
+	clear_counter_match_flag_bit(); /* erase remaining steps */
+}
+
+uint8_t accellerate(void)
+{
+	uint8_t i;
+
+	if (!allarm_hit_limit()) {
+		stmotor->rel_position = 0;
+
+		for (i = COUNTER_TOP_COMPARE; i > COUNTER_BOTTOM_COMPARE; i--) {
+			loop_until_counter_match();
+			OCR0 = i;
+		}
+
+		update_abs_position(); /* adjust abs step counter */
+	}
+
+	return(allarm_hit_limit());
+}
+
+uint8_t decellerate(void)
+{
+	uint8_t i;
+
+	if (!allarm_hit_limit()) {
+		stmotor->rel_position = 0;
+
+		for (i = COUNTER_BOTTOM_COMPARE; i < COUNTER_TOP_COMPARE; i++) {
+			loop_until_counter_match();
+			OCR0 = i;
+		}
+
+		update_abs_position();
+	}
+
+	return(allarm_hit_limit());
+}
+
+uint8_t run_for_x_steps(unsigned int steps)
+{
+	if (!allarm_hit_limit()) {
+		stmotor->rel_position = 0;
+
+		while ((stmotor->rel_position < steps) && !allarm_hit_limit())
+			_delay_us(COUNTER_DELAY_LOOP);
+
+		update_abs_position();
+	}
+
+	return(allarm_hit_limit());
+}
+
 /* This move will NOT check for switches, use only for calibration */
 void stmotor_exit_from_switch(void)
 {
@@ -151,17 +165,13 @@ void stmotor_exit_from_switch(void)
 		else
 			set_direction(0);
 
-		counter_slow_speed();
-		engine_start();
-		counter_start();
+		stm_start();
 
 		while (sw_hit())
 			_delay_us(COUNTER_DELAY_LOOP);
 
 		update_abs_position(); /* used in calibrate the top */
-		counter_stop();
-		engine_stop();
-		clear_counter_match_flag_bit();
+		stm_stop();
 		stmotor->flags &= ~_BV(STM_ALLARM);
 	}
 }
@@ -170,17 +180,13 @@ void stmotor_slow_check_zero(void)
 {
 	/* use only in a switch hit case */
 	if (sw_user_switch()) { 
-		counter_slow_speed();
-		engine_start();
-		counter_start();
+		stm_start();
 
-		while (sw_user_switch() && !hit_limit_allarm())
+		while (sw_user_switch() && !allarm_hit_limit())
 			_delay_us(COUNTER_DELAY_LOOP);
 
 		update_abs_position();
-		counter_stop();
-		engine_stop();
-		clear_counter_match_flag_bit();
+		stm_stop();
 		stmotor->flags &= ~_BV(STM_ALLARM);
 	}
 }
@@ -199,9 +205,7 @@ void stmotor_go_to(const int abs_position)
 		remaining_steps = -remaining_steps;
 	}
 
-	counter_slow_speed();
-	engine_start();
-	counter_start();
+	stm_start();
 	sw_allarm_irq(1); /* enable top or bottom allarm */
 
 	/* decide if there is enought distance to accellerate or set slow speed */
@@ -214,9 +218,7 @@ void stmotor_go_to(const int abs_position)
 		run_for_x_steps(remaining_steps);
 
 	sw_allarm_irq(0); /* disable switch control */
-	counter_stop();
-	engine_stop();
-	clear_counter_match_flag_bit();
+	stm_stop();
 }
 
 void stmotor_init(void)
