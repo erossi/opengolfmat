@@ -25,11 +25,11 @@
 #define COUNTER_DELAY_LOOP 100
 
 /* Accelleration and decelleration top and bottom */
-#define COUNTER_TOP_COMPARE 100
-#define COUNTER_BOTTOM_COMPARE 30
+#define COUNTER_TOP_COMPARE 30
+#define COUNTER_BOTTOM_COMPARE 10
 
 /* Accellerate/decellerate treshold. Has to be more than 2 * TOP - BOTTOM */
-#define COUNTER_STARTSTOP_STEPS 140
+#define COUNTER_STARTSTOP_STEPS 30
 
 void counter_start(void);
 void counter_stop(void);
