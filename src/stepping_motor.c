@@ -50,26 +50,43 @@ void update_abs_position(void)
 	stmotor->rel_position = 0;
 }
 
+void clear_counter_match_flag_bit(void)
+{
+	stmotor->flags &= ~_BV(STM_STEP); /* clear the flag */
+}
+
+/* start moving slowly */
+void stm_start(void) {
+	counter_slow_speed(); /* set slow speed */
+	engine_start(); /* energize the motor */
+	counter_start(); /* start */
+}
+
+/* stop now */
+void stm_stop(void) {
+	counter_stop(); /* stop */
+	engine_stop(); /* shutdown the motor */
+	clear_counter_match_flag_bit(); /* erase remaining steps */
+}
+
+ISR(INT0_vect)
+{
+	/* old
+	counter_stop();
+	engine_stop();
+	*/
+	stm_stop();
+	update_abs_position();
+	stmotor->flags |= _BV(STM_ALLARM);
+	sw_allarm_irq(0); /* disable myself */
+}
+
 unsigned short int allarm_hit_limit(void)
 {
 	if (sw_hit() || (stmotor->flags & _BV(STM_ALLARM)))
 		return(1);
 	else
 		return(0);
-}
-
-ISR(INT0_vect)
-{
-	counter_stop();
-	engine_stop();
-	update_abs_position();
-	stmotor->flags |= _BV(STM_ALLARM);
-	sw_allarm_irq(0); /* disable myself */
-}
-
-void clear_counter_match_flag_bit(void)
-{
-	stmotor->flags &= ~_BV(STM_STEP); /* clear the flag */
 }
 
 void loop_until_counter_match(void)
@@ -89,20 +106,6 @@ void set_direction(const unsigned short int dir)
 		stmotor->flags &= ~_BV(STM_UPDOWN); /* go down */
 
 	engine_set_direction(dir);
-}
-
-/* start moving slowly */
-void stm_start(void) {
-	counter_slow_speed(); /* set slow speed */
-	engine_start(); /* energize the motor */
-	counter_start(); /* start */
-}
-
-/* stop now */
-void stm_stop(void) {
-	counter_stop(); /* stop */
-	engine_stop(); /* shutdown the motor */
-	clear_counter_match_flag_bit(); /* erase remaining steps */
 }
 
 uint8_t accellerate(void)
