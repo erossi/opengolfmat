@@ -164,15 +164,16 @@ void stmotor_exit_from_switch(void)
 	/* use only in a switch hit case */
 	if (sw_hit()) { 
 		if (sw_hit_bottom())
-			set_direction(1);
+			set_direction(1); /* go up */
 		else
 			set_direction(0);
 
-		stm_start();
+		stm_start(); /* start slow */
 
 		while (sw_hit())
 			_delay_us(COUNTER_DELAY_LOOP);
 
+		run_for_x_steps(50); /* FIX the nukber in .h */
 		update_abs_position(); /* used in calibrate the top */
 		stm_stop();
 		stmotor->flags &= ~_BV(STM_ALLARM);
