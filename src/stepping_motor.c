@@ -89,12 +89,16 @@ unsigned short int allarm_hit_limit(void)
 		return(0);
 }
 
-void loop_until_counter_match(void)
+void loop_until_counter_match(uint8_t ntimes)
 {
-	clear_counter_match_flag_bit();
+	while (ntimes) {
+		clear_counter_match_flag_bit();
 
-	while (!(stmotor->flags & _BV(STM_STEP) || allarm_hit_limit()))
-		_delay_us(COUNTER_DELAY_LOOP);
+		while (!(stmotor->flags & _BV(STM_STEP) || allarm_hit_limit()))
+			_delay_us(COUNTER_DELAY_LOOP);
+
+		ntimes--;
+	}
 }
 
 /* 1 up, 0 down */
@@ -116,7 +120,7 @@ uint8_t accellerate(void)
 		stmotor->rel_position = 0;
 
 		for (i = COUNTER_TOP_COMPARE; i > COUNTER_BOTTOM_COMPARE; i--) {
-			loop_until_counter_match();
+			loop_until_counter_match(COUNTER_LOOP_TIMES);
 			OCR0 = i;
 		}
 
@@ -134,7 +138,7 @@ uint8_t decellerate(void)
 		stmotor->rel_position = 0;
 
 		for (i = COUNTER_BOTTOM_COMPARE; i < COUNTER_TOP_COMPARE; i++) {
-			loop_until_counter_match();
+			loop_until_counter_match(COUNTER_LOOP_TIMES);
 			OCR0 = i;
 		}
 
