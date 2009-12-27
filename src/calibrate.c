@@ -20,6 +20,7 @@
 
 #include <inttypes.h>
 #include <util/delay.h>
+#include "switch.h"
 #include "stepping_motor.h"
 #include "calibrate.h"
 
@@ -31,7 +32,14 @@ extern struct stmotor_t *stmotor;
 void goto_bottom(void)
 {
 	stmotor->abs_position=CAL_MAXSTEPS;
-	stmotor_go_to(0);
+
+	if (sw_ball_on_the_loader()) {
+		stmotor_go_to(0);
+		wait_until_ball_on_the_T();
+	} else {
+		stmotor_go_to(0);
+	}
+
 	stmotor_exit_from_switch();
 	stmotor->abs_position=0;
 }

@@ -34,6 +34,8 @@
 unsigned short int sw_hit_top(void);
 unsigned short int sw_hit_bottom(void);
 unsigned short int sw_hit(void);
+unsigned short int sw_ball_on_the_loader(void);
+unsigned short int sw_ball_on_the_T(void);
 unsigned short int sw_user_switch(void);
 void sw_allarm_irq(const unsigned short int f);
 unsigned short int sw_check_flags(void);
