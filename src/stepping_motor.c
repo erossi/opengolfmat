@@ -177,7 +177,14 @@ void stmotor_exit_from_switch(void)
 		while (sw_hit())
 			_delay_us(COUNTER_DELAY_LOOP);
 
-		run_for_x_steps(50); /* FIX the nukber in .h */
+		update_abs_position();
+
+		/* run for more N steps without allarms */
+		stmotor->rel_position = 0;
+
+		while (stmotor->rel_position < STM_EXIT_FROM_SWITCH_STEPS)
+			_delay_us(COUNTER_DELAY_LOOP);
+
 		update_abs_position(); /* used in calibrate the top */
 		stm_stop();
 		stmotor->flags &= ~_BV(STM_ALLARM);

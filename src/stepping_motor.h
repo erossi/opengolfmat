@@ -39,6 +39,9 @@ Set the prescaler used for the timer.
 #define STM_CALIBRATE 3 /* require calibration */
 #define STM_UNKNOWN 7 /* Something bad happens, stop everything and crash */
 
+/* Number of steps to exit backward from a switch hit condition */
+#define STM_EXIT_FROM_SWITCH_STEPS 200
+
 struct stmotor_t {
 	/* bit flags */
 	volatile uint8_t flags;
