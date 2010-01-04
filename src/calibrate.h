@@ -30,7 +30,6 @@
 
 void calibrate_init(void);
 void goto_bottom(void);
-void calibrate_bottom_and_top(void);
-uint8_t calibrate_zero(void);
+void calibrate_check_and_recalibrate(void);
 
 #endif

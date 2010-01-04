@@ -247,7 +247,6 @@ void stmotor_set_levels_of_the_T(void)
 void stmotor_init(void)
 {
 	engine_init();
-	sw_init();
 	stmotor->flags = 0; /* this should be something real */
 	stmotor->abs_position = 0; /* It's not your duty */
 	stmotor->rel_position = 0;

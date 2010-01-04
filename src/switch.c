@@ -79,6 +79,24 @@ unsigned short int sw_check_flags(void)
 		return(0);
 }
 
+/* true if user switch is pressed more than 10 (SW_RECAL_TMOUT) sec. */
+uint8_t sw_user_recalibration(void) {
+	uint8_t i, j;
+
+	j=1;
+
+	for (i=0; i<SW_RECALIBRATE_TIMEOUT; i++) {
+		if (sw_user_switch()) {
+			_delay_ms(1000);
+		} else {
+			i = SW_RECALIBRATE_TIMEOUT;
+			j = 0;
+		}
+	}
+
+	return (j);
+}
+
 /* WARNING: provide and INT0 routine */
 void sw_allarm_irq(const unsigned short int f)
 {

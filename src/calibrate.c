@@ -19,15 +19,19 @@
  */
 
 #include <inttypes.h>
+#include <avr/eeprom.h>
 #include <util/delay.h>
 #include "switch.h"
 #include "stepping_motor.h"
+#include "utils.h"
 #include "calibrate.h"
 
 /* Global variable and pointer to be used */
 /* inside the ISR routine */
 
 extern struct stmotor_t *stmotor;
+extern unsigned int EEMEM EE_zero_level;
+extern uint8_t EEMEM EE_calibrated;
 
 void goto_bottom(void)
 {
@@ -62,40 +66,41 @@ uint8_t calibrate_zero(void)
 	stmotor->zero=stmotor->abs_position;
 	stmotor_set_levels_of_the_T();
 
-	if (stmotor->high_level < stmotor->top)
+	if (stmotor->high_level < stmotor->top) {
+		stmotor->flags = 0;
+		eeprom_write_word(&EE_zero_level, stmotor->zero);
+		eeprom_write_byte(&EE_calibrated, 71);
 		return(1); /* ok */
-	else
+	} else {
 		return(0); /* calibration invalid */
-
+	}
 }
 
-/*
-uint8_t calibrate(void)
+void calibrate_check_and_recalibrate(void)
 {
-	uint8_t error = 0;
-
-	if (!sw_allarm()) {
-		calibrate_bottom();
-		calibrate_top();
-		goto_zero();
-	}
-
-	if (sw_top()) {
-		calibrate_at_top();
-		calibrate_bottom();
-		goto_zero();
-	}
-
-	if (sw_bottom()) {
-		calibrate_at_bottom();
-		calibrate_top();
-		goto_zero();
-	}
+	if (sw_user_recalibration())
+		calibrate_zero();
 }
-*/
 
 void calibrate_init(void)
 {
+	uint8_t calibrated;
+
 	stmotor_init();
+	calibrated = eeprom_read_byte(&EE_calibrated);
+
+	/* if uncalibrated */
+	while (calibrated != 71) {
+		/* wait for user switch and calibrate zero */
+		while (!sw_user_switch()) {
+			led_blink(2,2);
+			_delay_ms(1000);
+		}
+
+		if (calibrate_zero()) {
+			_delay_ms(1000); /* ??? */
+			calibrated = 71;
+		}
+	}
 }
 
