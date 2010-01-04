@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <avr/eeprom.h>
 #include <util/delay.h>
 #include "switch.h"
 #include "stepping_motor.h"
@@ -29,10 +30,17 @@
 #include "utils.h"
 
 struct stmotor_t *stmotor;
+unsigned int EEMEM EE_zero_level;
+uint8_t EEMEM EE_calibrated;
 
 int main (void) {
+	uint8_t calibrated;
+
 	/* Init globals */
         stmotor = malloc(sizeof(struct stmotor_t));
+	stmotor->zero = eeprom_read_word(&EE_zero_level);
+	calibrated = eeprom_read_byte(&EE_calibrated);
+
 
 	/* general port setup */
 	PORTB = 0;
@@ -46,17 +54,25 @@ int main (void) {
 		_delay_ms(1000);
 	}
 
-	/* wait for user switch and calibrate zero */
-	while (!sw_user_switch()) {
-		led_blink(2,2);
-		_delay_ms(1000);
-	}
-
 	sei();
 
-	calibrate_zero();
-	_delay_ms(1000);
-	stmotor->flags = 0;
+	/* if uncalibrated */
+	if (calibrated != 71) {
+		/* wait for user switch and calibrate zero */
+		while (!sw_user_switch()) {
+			led_blink(2,2);
+			_delay_ms(1000);
+		}
+
+		if (calibrate_zero()) {
+			_delay_ms(1000);
+			stmotor->flags = 0;
+			eeprom_write_word(&EE_zero_level, stmotor->zero);
+			eeprom_write_byte(&EE_calibrated, 71);
+		}
+	}
+
+	/* if user switch is pressed more than 10 sec re-calibrate */
 
 	for (;;) {
 		wait_until_ball_on_the_loader();

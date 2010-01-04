@@ -42,6 +42,9 @@ Set the prescaler used for the timer.
 /* Number of steps to exit backward from a switch hit condition */
 #define STM_EXIT_FROM_SWITCH_STEPS 200
 
+/* steps between level of the T */
+#define STM_STEPS_BETWEEN_LEVELS 500
+
 struct stmotor_t {
 	/* bit flags */
 	volatile uint8_t flags;
@@ -61,7 +64,7 @@ struct stmotor_t {
 	unsigned int zero, top;
 
 	/* levels ready for the player */
-	unsigned int low_level, mid_level, high_level;
+	unsigned int low_level, mid_level, high_level, max_level;
 	
 	/* personal player's level, adjusted by hand */
 	unsigned int player_level;
@@ -70,6 +73,7 @@ struct stmotor_t {
 void stmotor_exit_from_switch(void);
 void stmotor_slow_check_zero(void);
 void stmotor_go_to(const int abs_position);
+void stmotor_set_levels_of_the_T(void);
 void stmotor_init(void);
 
 #endif

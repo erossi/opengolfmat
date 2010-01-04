@@ -55,14 +55,18 @@ void calibrate_bottom_and_top(void)
 /* Set the level of the mat and calculate the low, mid and high
    point of the launcher */
 
-void calibrate_zero(void)
+uint8_t calibrate_zero(void)
 {
 	calibrate_bottom_and_top();
 	stmotor_slow_check_zero();
 	stmotor->zero=stmotor->abs_position;
-	stmotor->low_level = stmotor->zero + CAL_INTERMEDIATE_STEPS;
-	stmotor->mid_level = stmotor->low_level + CAL_INTERMEDIATE_STEPS;
-	stmotor->high_level = stmotor->mid_level + CAL_INTERMEDIATE_STEPS;
+	stmotor_set_levels_of_the_T();
+
+	if (stmotor->high_level < stmotor->top)
+		return(1); /* ok */
+	else
+		return(0); /* calibration invalid */
+
 }
 
 /*

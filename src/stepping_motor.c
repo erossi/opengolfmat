@@ -236,13 +236,23 @@ void stmotor_go_to(const int abs_position)
 	stm_stop();
 }
 
+void stmotor_set_levels_of_the_T(void)
+{
+	stmotor->low_level = stmotor->zero + STM_STEPS_BETWEEN_LEVELS;
+	stmotor->mid_level = stmotor->low_level + STM_STEPS_BETWEEN_LEVELS;
+	stmotor->high_level = stmotor->mid_level + STM_STEPS_BETWEEN_LEVELS;
+	stmotor->max_level = stmotor->top;
+}
+
 void stmotor_init(void)
 {
 	engine_init();
 	sw_init();
-	stmotor->flags = 0;
+	stmotor->flags = 0; /* this should be something real */
 	stmotor->abs_position = 0; /* It's not your duty */
 	stmotor->rel_position = 0;
+	/* zero level defined elsewhere */
+	stmotor_set_levels_of_the_T();
 
 	/* Generate an Interrupt on a compare match */
 	TIMSK = _BV(OCIE0);
