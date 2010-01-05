@@ -35,8 +35,12 @@ extern uint8_t EEMEM EE_calibrated;
 
 void goto_bottom(void)
 {
+	/* if ball is on the T grave error */
+	wait_until_ball_is_gone();
 	stmotor->abs_position=CAL_MAXSTEPS;
 
+	/* you MUST select the case before going to 0
+	   ball on the loader can not be true near 0 */
 	if (sw_ball_on_the_loader()) {
 		stmotor_go_to(0);
 		wait_until_ball_on_the_T();
