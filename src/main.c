@@ -28,6 +28,7 @@
 #include "stepping_motor.h"
 #include "calibrate.h"
 #include "utils.h"
+#include "shaker.h"
 
 struct stmotor_t *stmotor;
 unsigned int EEMEM EE_zero_level;
@@ -43,6 +44,7 @@ int main (void) {
 	DDRB = 0;
 	sw_init();
 	util_init();
+	shake_init();
 
 	/* wait until all the switches are off */
 	while (sw_ball_on_the_T()) {

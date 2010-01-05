@@ -24,6 +24,7 @@
 #include "counter.h"
 #include "engine.h"
 #include "switch.h"
+#include "shaker.h"
 #include "stepping_motor.h"
 
 /* Global variable and pointer to be used */
@@ -57,6 +58,7 @@ void clear_counter_match_flag_bit(void)
 
 /* start moving slowly */
 void stm_start(void) {
+	shake_it(1); /* start the shaker */
 	counter_slow_speed(); /* set slow speed */
 	engine_start(); /* energize the motor */
 	counter_start(); /* start */
@@ -67,6 +69,7 @@ void stm_stop(void) {
 	counter_stop(); /* stop */
 	engine_stop(); /* shutdown the motor */
 	clear_counter_match_flag_bit(); /* erase remaining steps */
+	shake_it(0); /* stop the shaker */
 }
 
 ISR(INT0_vect)

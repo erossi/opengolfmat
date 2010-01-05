@@ -12,7 +12,7 @@ REMOVE = rm -f
 init_obj = init.o
 stmotor_obj = engine.o switch.o counter.o stepping_motor.o
 calibrate_obj = $(stmotor_obj) calibrate.o
-objects = $(calibrate_obj) utils.o
+objects = $(calibrate_obj) utils.o shaker.o
 
 .PHONY: clean
 .SILENT: help
