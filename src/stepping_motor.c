@@ -239,12 +239,36 @@ void stmotor_go_to(const int abs_position)
 	stm_stop();
 }
 
+void stmotor_go_to_level(void) {
+	switch (stmotor->level) {
+		case 0: stmotor_go_to(stmotor->low_level);
+			break;
+		case 1: stmotor_go_to(stmotor->mid_level);
+			break;
+		case 2: stmotor_go_to(stmotor->high_level);
+			break;
+		case 3: stmotor_go_to(stmotor->max_level);
+			break;
+		default: stmotor_go_to(stmotor->player_level);
+			 break;
+	}
+}
+
 void stmotor_set_levels_of_the_T(void)
 {
 	stmotor->low_level = stmotor->zero + STM_STEPS_BETWEEN_LEVELS;
 	stmotor->mid_level = stmotor->low_level + STM_STEPS_BETWEEN_LEVELS;
 	stmotor->high_level = stmotor->mid_level + STM_STEPS_BETWEEN_LEVELS;
 	stmotor->max_level = stmotor->top;
+	stmotor->level = 1;
+}
+
+void stmotor_set_next_level_of_the_T(void)
+{
+	if (stmotor->level < 3)
+		stmotor->level++;
+	else
+		stmotor->level = 0;
 }
 
 void stmotor_init(void)

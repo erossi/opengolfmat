@@ -35,6 +35,8 @@ unsigned int EEMEM EE_zero_level;
 uint8_t EEMEM EE_calibrated;
 
 int main (void) {
+	unsigned short int i;
+
 	/* Init globals */
         stmotor = malloc(sizeof(struct stmotor_t));
 	stmotor->zero = eeprom_read_word(&EE_zero_level);
@@ -64,9 +66,23 @@ int main (void) {
 		wait_until_ball_on_the_T();
 		_delay_ms(1000);
 		stmotor->flags = 0;
-		stmotor_go_to(stmotor->mid_level);
-		wait_until_ball_is_gone();
-		_delay_ms(1000);
+		stmotor_go_to_level();
+		i=1;
+
+		while (i) {
+			if (sw_ball_on_the_T()) {
+				while (sw_user_switch()) {
+					stmotor_set_next_level_of_the_T();
+					stmotor_go_to_level();
+					_delay_ms(2000);
+				}
+
+				_delay_ms(1000);
+			} else {
+				i=0;
+			}
+		}
+
 		stmotor->flags = 0;
 	}
 
