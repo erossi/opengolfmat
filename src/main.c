@@ -52,11 +52,9 @@ int main (void) {
 
 	sei();
 
-	/* prepare the port and calibrate if zero is not calibrated */
+	/* prepare the port and calibrate if zero is not calibrated
+	   or a recalibration is required */
 	calibrate_init();
-
-	/* if user switch is pressed more than 10 sec re-calibrate */
-	calibrate_check_and_recalibrate();
 
 	for (;;) {
 		wait_until_ball_on_the_loader();

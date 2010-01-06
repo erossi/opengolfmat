@@ -76,7 +76,7 @@ uint8_t calibrate_zero(void)
 	}
 }
 
-void calibrate_check_and_recalibrate(void)
+void check_and_recalibrate(void)
 {
 	if (sw_user_recalibration())
 		calibrate_zero();
@@ -89,18 +89,24 @@ void calibrate_init(void)
 	stmotor_init();
 	calibrated = eeprom_read_byte(&EE_calibrated);
 
-	/* if uncalibrated */
-	while (calibrated != 71) {
-		/* wait for user switch and calibrate zero */
-		while (!sw_user_switch()) {
-			led_blink(2,2);
-			_delay_ms(1000);
-		}
+	if (calibrated == 71) {
+		check_and_recalibrate();
+	} else {
+		/* if uncalibrated */
+		while (calibrated != 71) {
+			/* wait for user switch and calibrate zero */
+			while (!sw_user_switch()) {
+				led_blink(2,2);
+				_delay_ms(1000);
+			}
 
-		if (calibrate_zero()) {
-			_delay_ms(1000); /* ??? */
-			calibrated = 71;
+			if (calibrate_zero()) {
+				_delay_ms(1000); /* ??? */
+				calibrated = 71;
+			}
 		}
 	}
+
+	calibrate_bottom_and_top();
 }
 

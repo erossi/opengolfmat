@@ -30,6 +30,5 @@
 
 void calibrate_init(void);
 void goto_bottom(void);
-void calibrate_check_and_recalibrate(void);
 
 #endif
