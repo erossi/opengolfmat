@@ -33,6 +33,16 @@ extern struct stmotor_t *stmotor;
 extern unsigned int EEMEM EE_zero_level;
 extern uint8_t EEMEM EE_calibrated;
 
+void set_calibrate(const uint8_t bit)
+{
+	stmotor->flags &= ~_BV(bit);
+}
+
+uint8_t is_calibrated(const uint8_t bit)
+{
+	return(stmotor->flags & bit);
+}
+
 void goto_bottom(void)
 {
 	/* if ball is on the T grave error */
@@ -50,14 +60,24 @@ void goto_bottom(void)
 
 	stmotor_exit_from_switch();
 	stmotor->abs_position=0;
+	set_calibrate(STM_CLB_BOTTOM);
+}
+
+void goto_top(void)
+{
+	stmotor_go_to(CAL_MAXSTEPS);
+	stmotor_exit_from_switch();
+
+	if (is_calibrated(STM_CLB_BOTTOM)) {
+		stmotor->top=stmotor->abs_position;
+		set_calibrate(STM_CLB_TOP);
+	}
 }
 
 void calibrate_bottom_and_top(void)
 {
 	goto_bottom();
-	stmotor_go_to(CAL_MAXSTEPS);
-	stmotor_exit_from_switch();
-	stmotor->top=stmotor->abs_position;
+	goto_top();
 }
 
 /* Set the level of the mat and calculate the low, mid and high

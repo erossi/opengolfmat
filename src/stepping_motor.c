@@ -274,7 +274,7 @@ void stmotor_set_next_level_of_the_T(void)
 void stmotor_init(void)
 {
 	engine_init();
-	stmotor->flags = 0; /* this should be something real */
+	stmotor->flags = _BV(STM_CLB_BOTTOM) | _BV(STM_CLB_TOP);
 	stmotor->abs_position = 0; /* It's not your duty */
 	stmotor->rel_position = 0;
 	/* zero level defined elsewhere */

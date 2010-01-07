@@ -36,7 +36,8 @@ Set the prescaler used for the timer.
 #define STM_STEP 0 /* bit 0: compare match, a new step has been done */
 #define STM_UPDOWN 1 /* bit 1: go up (1) or down (0) */
 #define STM_ALLARM 2 /* allarm stop the engine */
-#define STM_CALIBRATE 3 /* require calibration */
+#define STM_CLB_BOTTOM 3 /* require bottom calibration */
+#define STM_CLB_TOP 4 /* require top calibration */
 #define STM_UNKNOWN 7 /* Something bad happens, stop everything and crash */
 
 /* Number of steps to exit backward from a switch hit condition */
