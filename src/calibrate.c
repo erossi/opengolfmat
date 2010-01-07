@@ -33,14 +33,23 @@ extern struct stmotor_t *stmotor;
 extern unsigned int EEMEM EE_zero_level;
 extern uint8_t EEMEM EE_calibrated;
 
+/* set calibrate bottom or top bit to 0 (FALSE) */
 void set_calibrate(const uint8_t bit)
 {
 	stmotor->flags &= ~_BV(bit);
 }
 
-uint8_t is_calibrated(const uint8_t bit)
+/* TRUE if required calib. bit is TRUE */
+uint8_t need_to_be_calibrated(const uint8_t bit)
 {
 	return(stmotor->flags & bit);
+}
+
+void bottom_calibrate(void)
+{
+	stmotor_exit_from_switch();
+	stmotor->abs_position=0;
+	set_calibrate(STM_CLB_BOTTOM);
 }
 
 void goto_bottom(void)
@@ -58,9 +67,7 @@ void goto_bottom(void)
 		stmotor_go_to(0);
 	}
 
-	stmotor_exit_from_switch();
-	stmotor->abs_position=0;
-	set_calibrate(STM_CLB_BOTTOM);
+	bottom_calibrate();
 }
 
 void goto_top(void)
@@ -68,7 +75,7 @@ void goto_top(void)
 	stmotor_go_to(CAL_MAXSTEPS);
 	stmotor_exit_from_switch();
 
-	if (is_calibrated(STM_CLB_BOTTOM)) {
+	if (!need_to_be_calibrated(STM_CLB_BOTTOM)) {
 		stmotor->top=stmotor->abs_position;
 		set_calibrate(STM_CLB_TOP);
 	}
@@ -106,12 +113,32 @@ void check_and_recalibrate(void)
 		calibrate_zero();
 }
 
+void startup_check_switches(void)
+{
+	if (sw_hit()) {
+		if (sw_hit_bottom()) {
+			bottom_calibrate();
+		} else {
+			stmotor_exit_from_switch();
+		}
+	}
+}
+
+void startup_check_T(void) {
+	if (sw_ball_on_the_T()) {
+		goto_top();
+		wait_until_ball_is_gone();
+	}
+}
+
 void calibrate_init(void)
 {
 	uint8_t calibrated;
 
 	stmotor_init();
 	calibrated = eeprom_read_byte(&EE_calibrated);
+	startup_check_switches();
+	startup_check_T();
 
 	if (calibrated == 71) {
 		check_and_recalibrate();
@@ -131,6 +158,7 @@ void calibrate_init(void)
 		}
 	}
 
-	calibrate_bottom_and_top();
+	if (need_to_be_calibrated(STM_CLB_BOTTOM) || need_to_be_calibrated(STM_CLB_TOP))
+			calibrate_bottom_and_top();
 }
 
