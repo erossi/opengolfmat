@@ -22,12 +22,13 @@
 #include <util/delay.h>
 #include "shaker.h"
 
-/* 1 shake, 0 stop, other shake 1 sec */
+/* 1 shake, 0 stop, other shake 1 sec
+   pin logic is revesed */
 void shake_it(const unsigned short int cmd) {
 	switch (cmd) {
-		case 0:	SHAKE_PORT |= _BV(SHAKE_PIN);
+		case 0:	SHAKE_PORT &= ~_BV(SHAKE_PIN);
 			break;
-		case 1:	SHAKE_PORT &= ~_BV(SHAKE_PIN);
+		case 1:	SHAKE_PORT |= _BV(SHAKE_PIN);
 			break;
 		default:
 			shake_it(1);
