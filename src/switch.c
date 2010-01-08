@@ -21,6 +21,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include "shaker.h"
 #include "switch.h"
 
 /* Reverse logic, see electrical chart */
@@ -108,35 +109,41 @@ void sw_allarm_irq(const unsigned short int f)
 
 void wait_until_ball_on_the_loader(void)
 {
-	while (!sw_ball_on_the_loader())
-		_delay_ms(1000);
+	uint8_t i;
 
-	_delay_ms(1000);
+	for (i=0; i<2; i++) {
+		while (!sw_ball_on_the_loader())
+			if (sw_user_switch())
+				shake_it(2); /* shake 1 sec */
+			else 
+				_delay_ms(1000);
 
-	while (!sw_ball_on_the_loader())
 		_delay_ms(1000);
+	}
 }
 
 void wait_until_ball_on_the_T(void)
 {
-	while (!sw_ball_on_the_T())
-		_delay_ms(1000);
+	uint8_t i;
 
-	_delay_ms(1000);
+	for (i=0; i<2; i++) {
+		while (!sw_ball_on_the_T())
+			_delay_ms(1000);
 
-	while (!sw_ball_on_the_T())
 		_delay_ms(1000);
+	}
 }
 
 void wait_until_ball_is_gone(void)
 {
-	while (sw_ball_on_the_T())
-		_delay_ms(1000);
+	uint8_t i;
 
-	_delay_ms(1000);
+	for (i=0; i<2; i++) {
+		while (sw_ball_on_the_T())
+			_delay_ms(1000);
 
-	while (sw_ball_on_the_T())
 		_delay_ms(1000);
+	}
 }
 
 void sw_init(void)
