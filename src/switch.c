@@ -19,7 +19,6 @@
  */
 
 #include <avr/io.h>
-#include <avr/interrupt.h>
 #include <util/delay.h>
 #include "shaker.h"
 #include "switch.h"
@@ -96,15 +95,6 @@ uint8_t sw_user_recalibration(void) {
 	}
 
 	return (j);
-}
-
-/* WARNING: provide and INT0 routine */
-void sw_allarm_irq(const unsigned short int f)
-{
-	if (f)
-		GICR |= _BV(INT0); /* enable INT0 */
-	else
-		GICR &= ~_BV(INT0); /* disable INT0 */
 }
 
 void wait_until_ball_on_the_loader(void)

@@ -72,16 +72,21 @@ void stm_stop(void) {
 	shake_it(0); /* stop the shaker */
 }
 
+/* WARNING: provide and INT0 routine */
+void set_allarm_irq(const uint8_t f)
+{
+	if (f)
+		GICR |= _BV(INT0); /* enable INT0 */
+	else
+		GICR &= ~_BV(INT0); /* disable INT0 */
+}
+
 ISR(INT0_vect)
 {
-	/* old
-	counter_stop();
-	engine_stop();
-	*/
 	stm_stop();
 	update_abs_position();
 	stmotor->flags |= _BV(STM_ALLARM);
-	sw_allarm_irq(0); /* disable myself */
+	set_allarm_irq(0); /* disable myself */
 }
 
 unsigned short int allarm_hit_limit(void)
@@ -224,7 +229,7 @@ void stmotor_go_to(const int abs_position)
 	}
 
 	stm_start();
-	sw_allarm_irq(1); /* enable top or bottom allarm */
+	set_allarm_irq(1); /* enable top or bottom allarm */
 
 	/* decide if there is enought distance to accellerate or set slow speed */
 	if (remaining_steps > COUNTER_STARTSTOP_STEPS) {
@@ -235,7 +240,7 @@ void stmotor_go_to(const int abs_position)
 	} else
 		run_for_x_steps(remaining_steps);
 
-	sw_allarm_irq(0); /* disable switch control */
+	set_allarm_irq(0); /* disable switch control */
 	stm_stop();
 }
 

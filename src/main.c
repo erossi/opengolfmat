@@ -85,7 +85,6 @@ int main (void) {
 		wait_until_ball_on_the_loader();
 		goto_bottom();
 		wait_until_ball_on_the_T();
-		_delay_ms(1000);
 		stmotor->flags = 0;
 		stmotor_go_to_level();
 		wait_for_the_strike();
