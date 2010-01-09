@@ -61,7 +61,7 @@ int main (void) {
 		_delay_ms(1000);
 		stmotor->flags = 0;
 		stmotor_go_to_level();
-		i=1;
+		i=2;
 
 		while (i) {
 			if (sw_ball_on_the_T()) {
@@ -70,11 +70,11 @@ int main (void) {
 					stmotor_go_to_level();
 					_delay_ms(2000);
 				}
-
-				_delay_ms(1000);
 			} else {
-				i=0;
+				i--;
 			}
+
+			_delay_ms(1000);
 		}
 
 		stmotor->flags = 0;
