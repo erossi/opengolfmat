@@ -249,6 +249,8 @@ void stmotor_go_to_level(void) {
 			break;
 		case 3: stmotor_go_to(stmotor->max_level);
 			break;
+		case 4: stmotor_go_to(stmotor->zero);
+			break;
 		default: stmotor_go_to(stmotor->player_level);
 			 break;
 	}

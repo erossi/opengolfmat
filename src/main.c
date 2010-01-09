@@ -34,9 +34,36 @@ struct stmotor_t *stmotor;
 unsigned int EEMEM EE_zero_level;
 uint8_t EEMEM EE_calibrated;
 
-int main (void) {
+void park_the_T(void) {
+	/* parking the T on zero if no ball on the loader */
+	if (!sw_ball_on_the_loader() && (stmotor->abs_position != stmotor->zero)) {
+		stmotor->level = 4;
+		stmotor_go_to_level();
+	}
+
+}
+
+void wait_for_the_strike(void) {
 	unsigned short int i;
 
+	i=2;
+
+	while (i) {
+		if (sw_ball_on_the_T()) {
+			while (sw_user_switch()) {
+				stmotor_set_next_level_of_the_T();
+				stmotor_go_to_level();
+				_delay_ms(2000);
+			}
+		} else {
+			i--;
+		}
+
+		_delay_ms(1000);
+	}
+}
+
+int main (void) {
 	/* Init globals */
         stmotor = malloc(sizeof(struct stmotor_t));
 	stmotor->zero = eeprom_read_word(&EE_zero_level);
@@ -55,28 +82,14 @@ int main (void) {
 	calibrate_init();
 
 	for (;;) {
+		park_the_T();
 		wait_until_ball_on_the_loader();
 		goto_bottom();
 		wait_until_ball_on_the_T();
 		_delay_ms(1000);
 		stmotor->flags = 0;
 		stmotor_go_to_level();
-		i=2;
-
-		while (i) {
-			if (sw_ball_on_the_T()) {
-				while (sw_user_switch()) {
-					stmotor_set_next_level_of_the_T();
-					stmotor_go_to_level();
-					_delay_ms(2000);
-				}
-			} else {
-				i--;
-			}
-
-			_delay_ms(1000);
-		}
-
+		wait_for_the_strike();
 		stmotor->flags = 0;
 	}
 
