@@ -10,7 +10,7 @@ CC = avr-gcc
 REMOVE = rm -f
 
 init_obj = init.o
-stmotor_obj = engine.o switch.o counter.o stepping_motor.o
+stmotor_obj = engine.o switch.o counter.o stepping_motor.o wait.o
 calibrate_obj = $(stmotor_obj) calibrate.o
 objects = $(calibrate_obj) utils.o shaker.o
 

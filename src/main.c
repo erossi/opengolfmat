@@ -25,6 +25,7 @@
 #include <avr/eeprom.h>
 #include <util/delay.h>
 #include "switch.h"
+#include "wait.h"
 #include "stepping_motor.h"
 #include "calibrate.h"
 #include "utils.h"

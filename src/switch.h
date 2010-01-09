@@ -42,9 +42,6 @@ unsigned short int sw_ball_on_the_T(void);
 unsigned short int sw_user_switch(void);
 uint8_t sw_user_recalibration(void);
 unsigned short int sw_check_flags(void);
-void wait_until_ball_on_the_loader(void);
-void wait_until_ball_on_the_T(void);
-void wait_until_ball_is_gone(void);
 void sw_init(void);
 
 #endif

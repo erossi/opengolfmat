@@ -20,7 +20,6 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
-#include "shaker.h"
 #include "switch.h"
 
 /* Reverse logic, see electrical chart */
@@ -95,45 +94,6 @@ uint8_t sw_user_recalibration(void) {
 	}
 
 	return (j);
-}
-
-void wait_until_ball_on_the_loader(void)
-{
-	uint8_t i;
-
-	for (i=0; i<2; i++) {
-		while (!sw_ball_on_the_loader())
-			if (sw_user_switch())
-				shake_it(2); /* shake 1 sec */
-			else 
-				_delay_ms(1000);
-
-		_delay_ms(1000);
-	}
-}
-
-void wait_until_ball_on_the_T(void)
-{
-	uint8_t i;
-
-	for (i=0; i<2; i++) {
-		while (!sw_ball_on_the_T())
-			_delay_ms(1000);
-
-		_delay_ms(1000);
-	}
-}
-
-void wait_until_ball_is_gone(void)
-{
-	uint8_t i;
-
-	for (i=0; i<2; i++) {
-		while (sw_ball_on_the_T())
-			_delay_ms(1000);
-
-		_delay_ms(1000);
-	}
 }
 
 void sw_init(void)
