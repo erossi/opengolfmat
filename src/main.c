@@ -36,9 +36,8 @@ uint8_t EEMEM EE_calibrated;
 
 void park_the_T(void) {
 	/* parking the T on zero if no ball on the loader */
-	if (!sw_ball_on_the_loader() && (stmotor->abs_position != stmotor->zero)) {
-		stmotor->level = 4;
-		stmotor_go_to_level();
+	if (!sw_ball_on_the_loader() && (stmotor->abs_position != stmotor->zero) && !sw_ball_on_the_T()) {
+		stmotor_go_to(stmotor->zero);
 	}
 
 }
