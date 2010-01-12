@@ -164,7 +164,6 @@ void calibrate_init(void)
 			}
 
 			if (calibrate_zero()) {
-				_delay_ms(1000); /* ??? */
 				calibrated = 71;
 			}
 		}

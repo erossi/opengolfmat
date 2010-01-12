@@ -33,9 +33,9 @@ void wait_until_ball_on_the_loader(void)
 			if (sw_user_switch())
 				shake_it(2); /* shake 1 sec */
 			else 
-				_delay_ms(1000);
+				_delay_ms(WAIT_LOADER);
 
-		_delay_ms(1000);
+		_delay_ms(WAIT_LOADER);
 	}
 }
 
@@ -45,9 +45,9 @@ void wait_until_ball_on_the_T(void)
 
 	for (i=0; i<2; i++) {
 		while (!sw_ball_on_the_T())
-			_delay_ms(1000);
+			_delay_ms(WAIT_T);
 
-		_delay_ms(1000);
+		_delay_ms(WAIT_T);
 	}
 }
 
@@ -57,9 +57,9 @@ void wait_until_ball_is_gone(void)
 
 	for (i=0; i<2; i++) {
 		while (sw_ball_on_the_T())
-			_delay_ms(1000);
+			_delay_ms(WAIT_GONE);
 
-		_delay_ms(1000);
+		_delay_ms(WAIT_GONE);
 	}
 }
 

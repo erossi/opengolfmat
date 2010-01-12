@@ -59,7 +59,7 @@ void wait_for_the_strike(void) {
 			i--;
 		}
 
-		_delay_ms(1000);
+		_delay_ms(100);
 	}
 }
 
@@ -86,10 +86,8 @@ int main (void) {
 		wait_until_ball_on_the_loader();
 		goto_bottom();
 		wait_until_ball_on_the_T();
-		stmotor->flags = 0;
 		stmotor_go_to_level();
 		wait_for_the_strike();
-		stmotor->flags = 0;
 	}
 
 	cli();

@@ -25,15 +25,15 @@
 #define COUNTER_DELAY_LOOP 100
 
 /* Accelleration and decelleration top and bottom */
-#define COUNTER_TOP_COMPARE 100
+#define COUNTER_TOP_COMPARE 60
 #define COUNTER_BOTTOM_COMPARE 15
 /* Number of steps before changing the treshold during
    accel. and decel. */
-#define COUNTER_LOOP_TIMES 3
+#define COUNTER_LOOP_TIMES 5
 
 /* Accellerate/decellerate treshold. Has to be more than
-   2 * (TOP - BOTTOM) * LOOP_MATCH */
-#define COUNTER_STARTSTOP_STEPS 510
+   2 * (TOP - BOTTOM) * LOOP_TIMES */
+#define COUNTER_STARTSTOP_STEPS 450
 
 void counter_start(void);
 void counter_stop(void);
