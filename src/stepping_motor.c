@@ -247,7 +247,7 @@ void stmotor_go_to_level(void) {
 			break;
 		case 2: stmotor_go_to(stmotor->high_level);
 			break;
-		case 3: stmotor_go_to(stmotor->max_level);
+		case 3: stmotor_go_to(stmotor->top);
 			break;
 		case 4: stmotor_go_to(stmotor->zero);
 			break;
@@ -261,7 +261,6 @@ void stmotor_set_levels_of_the_T(void)
 	stmotor->low_level = stmotor->zero + STM_STEPS_BETWEEN_LEVELS;
 	stmotor->mid_level = stmotor->low_level + STM_STEPS_BETWEEN_LEVELS;
 	stmotor->high_level = stmotor->mid_level + STM_STEPS_BETWEEN_LEVELS;
-	stmotor->max_level = stmotor->top;
 	stmotor->level = 1;
 }
 

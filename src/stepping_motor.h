@@ -65,7 +65,7 @@ struct stmotor_t {
 	unsigned int zero, top;
 
 	/* levels ready for the player */
-	unsigned int low_level, mid_level, high_level, max_level;
+	unsigned int low_level, mid_level, high_level;
 	
 	/* personal player's level, adjusted by hand */
 	unsigned int player_level;

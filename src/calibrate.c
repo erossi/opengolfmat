@@ -42,7 +42,18 @@ void set_calibrate(const uint8_t bit)
 /* TRUE if required calib. bit is TRUE */
 uint8_t need_to_be_calibrated(const uint8_t bit)
 {
-	return(stmotor->flags & bit);
+	if (stmotor->flags & _BV(bit))
+		return(1);
+	else
+		return(0);
+}
+
+uint8_t is_calibrated(const uint8_t bit)
+{
+	if (stmotor->flags & _BV(bit))
+		return(0);
+	else
+		return(1);
 }
 
 void bottom_calibrate(void)
@@ -75,7 +86,7 @@ void goto_top(void)
 	stmotor_go_to(CAL_MAXSTEPS);
 	stmotor_exit_from_switch();
 
-	if (!need_to_be_calibrated(STM_CLB_BOTTOM)) {
+	if (is_calibrated(STM_CLB_BOTTOM)) {
 		stmotor->top=stmotor->abs_position;
 		set_calibrate(STM_CLB_TOP);
 	}
@@ -159,6 +170,6 @@ void calibrate_init(void)
 	}
 
 	if (need_to_be_calibrated(STM_CLB_BOTTOM) || need_to_be_calibrated(STM_CLB_TOP))
-			calibrate_bottom_and_top();
+	calibrate_bottom_and_top();
 }
 
