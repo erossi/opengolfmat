@@ -23,12 +23,9 @@
 #include "default.h"
 #include "utils.h"
 
-/* num - blinks number
-   led - 0 green, 1 red, 2 both
-   async - 0 no, 1 yes
- */
-
-void led_blink(uint8_t num, const uint8_t led)
+/* led - 0 green, 1 red, 2 both
+   onoff - 0 off, 1 on */
+void led_ctrl(const uint8_t led, const uint8_t onoff)
 {
 	uint8_t pin;
 
@@ -43,30 +40,23 @@ void led_blink(uint8_t num, const uint8_t led)
 			break;
 	}
 
-	while (num) {
+	if (onoff)
 		LED_PORT |= pin;
-		_delay_ms(300);
+	else
 		LED_PORT &= ~pin;
+}
+
+/* num - blinks number
+   led - 0 green, 1 red, 2 both */
+void led_blink(uint8_t num, const uint8_t led)
+{
+	while (num) {
+		led_ctrl(led, 1);
+		_delay_ms(300);
+		led_ctrl(led, 0);
 		_delay_ms(300);
 		num--;
 	}
-}
-
-void wait_for_click(void)
-{
-	loop_until_bit_is_clear(UTILS_SWITCH_PORT, UTILS_SWITCH_PIN);
-	led_blink(1,0);
-	_delay_ms(1000);
-}
-
-uint8_t check_for_click(void)
-{
-	if (bit_is_clear(UTILS_SWITCH_PORT, UTILS_SWITCH_PIN)) {
-		led_blink(1,0);
-		_delay_ms(1000);
-		return (1);
-	} else
-		return (0);
 }
 
 void util_init(void)
@@ -78,4 +68,6 @@ void util_init(void)
 	/* led port out */
 	LED_PORT &= ~(_BV(LED_GREEN_PIN) | _BV(LED_RED_PIN));
 	LED_DDR |= _BV(LED_GREEN_PIN) | _BV(LED_RED_PIN);
+
+	led_ctrl(0, 1); /* power on */
 }
