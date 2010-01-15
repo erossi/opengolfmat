@@ -26,7 +26,8 @@
 #define CAL_BACKSTEPS 100
 
 /* Maximum number of steps */
-#define CAL_MAXSTEPS 20000
+/* Should be > of STM_CRASH_STEPS */
+#define CAL_MAXSTEPS 25000
 
 void calibrate_init(void);
 void goto_bottom(void);

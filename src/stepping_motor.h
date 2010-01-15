@@ -38,10 +38,16 @@ Set the prescaler used for the timer.
 #define STM_ALLARM 2 /* allarm stop the engine */
 #define STM_CLB_BOTTOM 3 /* require bottom calibration */
 #define STM_CLB_TOP 4 /* require top calibration */
-#define STM_UNKNOWN 7 /* Something bad happens, stop everything and crash */
+#define STM_DISASTER 7 /* Something bad happens, stop everything and crash */
+
+/* if abs_position is less than 0 or > CRASH_STEPS then crash */
+#define STM_CRASH_STEPS 20000
 
 /* Number of steps to exit backward from a switch hit condition */
 #define STM_EXIT_FROM_SWITCH_STEPS 200
+
+/* if exiting from switch should not require this number of steps */
+#define STM_EXIT_FROM_SWITCH_MAX_STEPS 500
 
 /* steps between level of the T */
 #define STM_STEPS_BETWEEN_LEVELS 1000
@@ -74,6 +80,7 @@ struct stmotor_t {
 	unsigned short int level;
 };
 
+void disaster(void);
 void stmotor_exit_from_switch(void);
 void stmotor_slow_check_zero(void);
 void stmotor_go_to(const int abs_position);

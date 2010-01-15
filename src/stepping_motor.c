@@ -25,31 +25,13 @@
 #include "engine.h"
 #include "switch.h"
 #include "shaker.h"
+#include "utils.h"
 #include "stepping_motor.h"
 
 /* Global variable and pointer to be used */
 /* inside the ISR routine */
 
 extern struct stmotor_t *stmotor;
-
-ISR(TIMER0_COMP_vect)
-{
-	/* increment the relative step */
-	stmotor->rel_position++;
-
-	/* set the compare match flag bit */
-	stmotor->flags |= _BV(STM_STEP);
-}
-
-void update_abs_position(void)
-{
-	if (stmotor->flags & _BV(STM_UPDOWN))
-		stmotor->abs_position += stmotor->rel_position; /* up */
-	else
-		stmotor->abs_position -= stmotor->rel_position; /* down */
-
-	stmotor->rel_position = 0;
-}
 
 void clear_counter_match_flag_bit(void)
 {
@@ -70,6 +52,38 @@ void stm_stop(void) {
 	engine_stop(); /* shutdown the motor */
 	clear_counter_match_flag_bit(); /* erase remaining steps */
 	shake_it(0); /* stop the shaker */
+}
+
+void disaster(void)
+{
+	stm_stop();
+
+	for (;;) {
+		led_blink(1,2);
+	}
+}
+
+ISR(TIMER0_COMP_vect)
+{
+	/* increment the relative step */
+	stmotor->rel_position++;
+
+	if (stmotor->rel_position > STM_CRASH_STEPS) {
+		disaster();
+	}
+
+	/* set the compare match flag bit */
+	stmotor->flags |= _BV(STM_STEP);
+}
+
+void update_abs_position(void)
+{
+	if (stmotor->flags & _BV(STM_UPDOWN))
+		stmotor->abs_position += stmotor->rel_position; /* up */
+	else
+		stmotor->abs_position -= stmotor->rel_position; /* down */
+
+	stmotor->rel_position = 0;
 }
 
 /* WARNING: provide and INT0 routine */
@@ -175,6 +189,8 @@ void stmotor_exit_from_switch(void)
 {
 	/* use only in a switch hit case */
 	if (sw_hit()) { 
+		stmotor->rel_position = 0;
+
 		if (sw_hit_bottom())
 			set_direction(1); /* go up */
 		else
@@ -182,8 +198,12 @@ void stmotor_exit_from_switch(void)
 
 		stm_start(); /* start slow */
 
-		while (sw_hit())
+		while (sw_hit()) {
+			if (stmotor->rel_position > STM_EXIT_FROM_SWITCH_MAX_STEPS)
+				disaster();
+
 			_delay_us(COUNTER_DELAY_LOOP);
+		}
 
 		update_abs_position();
 

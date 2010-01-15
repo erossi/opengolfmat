@@ -79,6 +79,10 @@ void goto_bottom(void)
 		stmotor_go_to(0);
 	}
 
+	/* We should never reach the 0 */
+	if (stmotor->abs_position == 0)
+		disaster();
+
 	bottom_calibrate();
 }
 
