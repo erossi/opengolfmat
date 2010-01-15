@@ -22,6 +22,7 @@
 #include <util/delay.h>
 #include "shaker.h"
 #include "switch.h"
+#include "utils.h"
 #include "wait.h"
 
 void wait_until_ball_on_the_loader(void)
@@ -33,7 +34,7 @@ void wait_until_ball_on_the_loader(void)
 			if (sw_user_switch())
 				shake_it(2); /* shake 1 sec */
 			else 
-				_delay_ms(WAIT_LOADER);
+				led_blink(1, 1); /* red led blink */
 
 		_delay_ms(WAIT_LOADER);
 	}

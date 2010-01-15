@@ -59,8 +59,10 @@ void wait_for_the_strike(void) {
 			i--;
 		}
 
-		_delay_ms(100);
+		led_blink(1, 0); /* green led blink */
 	}
+
+	led_ctrl(0, 1);
 }
 
 int main (void) {
