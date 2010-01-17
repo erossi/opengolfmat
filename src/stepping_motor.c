@@ -20,6 +20,7 @@
 
 #include <inttypes.h>
 #include <avr/interrupt.h>
+#include <avr/eeprom.h>
 #include <util/delay.h>
 #include "counter.h"
 #include "engine.h"
@@ -32,6 +33,7 @@
 /* inside the ISR routine */
 
 extern struct stmotor_t *stmotor;
+extern uint8_t EEMEM EE_disaster;
 
 void clear_counter_match_flag_bit(void)
 {
@@ -57,9 +59,10 @@ void stm_stop(void) {
 void disaster(void)
 {
 	stm_stop();
+	eeprom_write_byte(&EE_disaster, 71);
 
 	for (;;) {
-		led_blink(1,2);
+		led_ctrl(2,1); /* both led on */
 	}
 }
 

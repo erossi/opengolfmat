@@ -31,7 +31,7 @@
 
 /* led 0 green, led 1 red */
 void led_ctrl(const uint8_t led, const uint8_t onoff);
-void led_blink(uint8_t num, const uint8_t led);
+void led_blink(const uint8_t led, uint8_t num);
 void util_init(void);
 
 #endif

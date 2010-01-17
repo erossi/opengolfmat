@@ -29,14 +29,15 @@ void led_ctrl(const uint8_t led, const uint8_t onoff)
 {
 	uint8_t pin;
 
-	pin = _BV(LED_GREEN_PIN | LED_RED_PIN);
-
 	switch (led) {
 		case 0:
 			pin = _BV(LED_GREEN_PIN);
 			break;
 		case 1:
 			pin = _BV(LED_RED_PIN);
+			break;
+		default:
+			pin = _BV(LED_GREEN_PIN | LED_RED_PIN);
 			break;
 	}
 
@@ -48,7 +49,7 @@ void led_ctrl(const uint8_t led, const uint8_t onoff)
 
 /* num - blinks number
    led - 0 green, 1 red, 2 both */
-void led_blink(uint8_t num, const uint8_t led)
+void led_blink(const uint8_t led, uint8_t num)
 {
 	while (num) {
 		led_ctrl(led, 1);
