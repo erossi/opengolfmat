@@ -114,6 +114,22 @@ unsigned short int allarm_hit_limit(void)
 		return(0);
 }
 
+void intrastep_check(void)
+{
+	/* Ball on the T && going down && below zero && > 1cm from 0 */
+	if (sw_ball_on_the_T() && \
+			!(stmotor->flags & _BV(STM_UPDOWN)) && \
+			((stmotor->abs_position - stmotor->rel_position) < stmotor->zero) && \
+			(stmotor->abs_position - stmotor->rel_position) > 1000) {
+		stm_stop();
+		update_abs_position();
+		stmotor->flags |= _BV(STM_ALLARM);
+		disaster();
+		}
+
+	_delay_us(COUNTER_DELAY_LOOP); /* up */
+}
+
 void loop_until_counter_match(uint8_t ntimes)
 {
 	while (ntimes) {
@@ -179,7 +195,7 @@ uint8_t run_for_x_steps(unsigned int steps)
 		stmotor->rel_position = 0;
 
 		while ((stmotor->rel_position < steps) && !allarm_hit_limit())
-			_delay_us(COUNTER_DELAY_LOOP);
+			intrastep_check();
 
 		update_abs_position();
 	}

@@ -1,0 +1,15 @@
+open bugs
+-----------
+100112-1. set level of the T appens when TOP is undefined
+100115-1. blink red and green during calibration
+100116-1. Recalibration wrong, bottom and top or zero value wrong ?!?
+
+Whishlist
+---------
+
+Closed bugs
+-----------
+100112-3. On boot in a DISASTER mode, if user switch > 10 sec, clear DISASTER and continue
+100112-6. red led on - DISASTER mode
+100112-7. on going down, level < zero & ball on the T goto top and wait for strike
+
