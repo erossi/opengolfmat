@@ -37,7 +37,7 @@ void led_ctrl(const uint8_t led, const uint8_t onoff)
 			pin = _BV(LED_RED_PIN);
 			break;
 		default:
-			pin = _BV(LED_GREEN_PIN | LED_RED_PIN);
+			pin = _BV(LED_GREEN_PIN) | _BV(LED_RED_PIN);
 			break;
 	}
 

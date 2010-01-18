@@ -156,20 +156,21 @@ void calibrate_init(void)
 	startup_check_switches();
 	startup_check_T();
 
-	if (calibrated == 71) {
-		check_and_recalibrate();
-	} else {
-		/* if uncalibrated */
-		while (calibrated != 71) {
-			/* wait for user switch and calibrate zero */
-			while (!sw_user_switch()) {
-				led_blink(2,2);
-				_delay_ms(1000);
-			}
+	if (calibrated == 71)
+		if (sw_user_recalibration())
+			calibrated = 0;
 
-			if (calibrate_zero()) {
-				calibrated = 71;
-			}
+	/* if uncalibrated */
+	while (calibrated != 71) {
+		/* wait for user switch and calibrate zero */
+		while (!sw_user_switch()) {
+			led_blink(2,2);
+			_delay_ms(1000);
+		}
+
+		if (calibrate_zero()) {
+			calibrated = 71;
+			led_ctrl(0,1); /* green on */
 		}
 	}
 
