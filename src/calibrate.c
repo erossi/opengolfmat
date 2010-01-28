@@ -1,6 +1,6 @@
 /*
    This file is part of OpenGolfMat
-   Copyright (C) 2009 Enrico Rossi
+   Copyright (C) 2009-2010 Enrico Rossi
 
    OpenGolfMat is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,40 +28,17 @@
 #include "calibrate.h"
 
 /* Global variable and pointer to be used */
-/* inside the ISR routine */
 
 extern struct stmotor_t *stmotor;
 extern uint16_t EEMEM EE_zero_level;
 extern uint8_t EEMEM EE_calibrated;
 
-/* set calibrate bottom or top bit to 0 (FALSE) */
-void set_calibrate(const uint8_t bit)
-{
-	stmotor->flags &= ~_BV(bit);
-}
-
-/* TRUE if required calib. bit is TRUE */
-uint8_t need_to_be_calibrated(const uint8_t bit)
-{
-	if (stmotor->flags & _BV(bit))
-		return(1);
-	else
-		return(0);
-}
-
-uint8_t is_calibrated(const uint8_t bit)
-{
-	if (stmotor->flags & _BV(bit))
-		return(0);
-	else
-		return(1);
-}
-
 void bottom_calibrate(void)
 {
 	stmotor_exit_from_switch();
 	stmotor->abs_position=0;
-	set_calibrate(STM_CLB_BOTTOM);
+	/* Clear the bottom calibrate bit from flags */
+	stmotor->flags &= ~_BV(STM_CLB_BOTTOM);
 }
 
 void goto_bottom(void)
@@ -91,9 +68,11 @@ void goto_top(void)
 	stmotor_go_to(CAL_MAXSTEPS);
 	stmotor_exit_from_switch();
 
-	if (is_calibrated(STM_CLB_BOTTOM)) {
+	/* if bottom is calibrated then set the top value */
+	if (!(stmotor->flags & _BV(STM_CLB_BOTTOM))) {
 		stmotor->top=stmotor->abs_position;
-		set_calibrate(STM_CLB_TOP);
+		/* Clear the top calibrate bit from flags */
+		stmotor->flags &= ~_BV(STM_CLB_TOP);
 	}
 }
 
@@ -174,7 +153,8 @@ void calibrate_init(void)
 		}
 	}
 
-	if (need_to_be_calibrated(STM_CLB_BOTTOM) || need_to_be_calibrated(STM_CLB_TOP))
+	/* if bottom or top has to be calibrated */
+	if (stmotor->flags & _BV(STM_CLB_BOTTOM) || stmotor->flags & _BV(STM_CLB_TOP))
 	calibrate_bottom_and_top();
 }
 
