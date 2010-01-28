@@ -52,13 +52,6 @@ void check_for_disaster(void)
 	}
 }
 
-void park_the_T(void) {
-	/* parking the T on zero if no ball on the loader */
-	if (!sw_ball_on_the_loader() && (stmotor->abs_position != stmotor->zero) && !sw_ball_on_the_T()) {
-		stmotor_go_to(stmotor->zero);
-	}
-}
-
 void wait_for_the_strike(void) {
 	unsigned short int i;
 
@@ -101,7 +94,7 @@ int main (void) {
 	stm_init();
 
 	for (;;) {
-		park_the_T();
+		stm_park_the_T();
 		wait_until_ball_on_the_loader();
 		stm_go_to_bottom();
 		wait_until_ball_on_the_T();

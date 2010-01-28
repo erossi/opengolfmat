@@ -375,6 +375,14 @@ void stm_go_to_top(void)
 	}
 }
 
+void stm_park_the_T(void)
+{
+	/* parking the T on zero if no ball on the loader */
+	if (!sw_ball_on_the_loader() && (stmotor->abs_position != stmotor->zero) && !sw_ball_on_the_T()) {
+		stmotor_go_to(stmotor->zero);
+	}
+}
+
 void calibrate_bottom_and_top(void)
 {
 	stm_go_to_bottom();

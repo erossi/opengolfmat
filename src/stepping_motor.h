@@ -97,6 +97,7 @@ void stm_go_to_level(void);
 void stm_go_to_bottom(void);
 void stmotor_set_levels_of_the_T(void);
 void stmotor_set_next_level_of_the_T(void);
+void stm_park_the_T(void);
 void stm_init(void);
 
 #endif
