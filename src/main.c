@@ -27,7 +27,6 @@
 #include "switch.h"
 #include "wait.h"
 #include "stepping_motor.h"
-#include "calibrate.h"
 #include "utils.h"
 #include "shaker.h"
 
@@ -69,7 +68,7 @@ void wait_for_the_strike(void) {
 		if (sw_ball_on_the_T()) {
 			while (sw_user_switch()) {
 				stmotor_set_next_level_of_the_T();
-				stmotor_go_to_level();
+				stm_go_to_level();
 				_delay_ms(2000);
 			}
 		} else {
@@ -99,14 +98,14 @@ int main (void) {
 
 	/* prepare the port and calibrate if zero is not calibrated
 	   or a recalibration is required */
-	calibrate_init();
+	stm_init();
 
 	for (;;) {
 		park_the_T();
 		wait_until_ball_on_the_loader();
-		goto_bottom();
+		stm_go_to_bottom();
 		wait_until_ball_on_the_T();
-		stmotor_go_to_level();
+		stm_go_to_level();
 		wait_for_the_strike();
 	}
 

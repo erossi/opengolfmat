@@ -27,6 +27,7 @@
 #include "switch.h"
 #include "shaker.h"
 #include "utils.h"
+#include "wait.h"
 #include "stepping_motor.h"
 
 /* Global variable and pointer to be used */
@@ -34,6 +35,8 @@
 
 extern struct stmotor_t *stmotor;
 extern uint8_t EEMEM EE_disaster;
+extern uint16_t EEMEM EE_zero_level;
+extern uint8_t EEMEM EE_calibrated;
 
 void clear_counter_match_flag_bit(void)
 {
@@ -296,7 +299,7 @@ void stmotor_go_to(const int abs_position)
 	stm_stop();
 }
 
-void stmotor_go_to_level(void) {
+void stm_go_to_level(void) {
 	switch (stmotor->level) {
 		case 0: stmotor_go_to(stmotor->low_level);
 			break;
@@ -329,7 +332,131 @@ void stmotor_set_next_level_of_the_T(void)
 		stmotor->level = 0;
 }
 
-void stmotor_init(void)
+void bottom_calibrate(void)
+{
+	stmotor_exit_from_switch();
+	stmotor->abs_position=0;
+	/* Clear the bottom calibrate bit from flags */
+	stmotor->flags &= ~_BV(STM_CLB_BOTTOM);
+}
+
+void stm_go_to_bottom(void)
+{
+	/* if ball is on the T grave error */
+	wait_until_ball_is_gone();
+	stmotor->abs_position=CAL_MAXSTEPS;
+
+	/* you MUST select the case before going to 0
+	   ball on the loader can not be true near 0 */
+	if (sw_ball_on_the_loader()) {
+		stmotor_go_to(0);
+		wait_until_ball_on_the_T();
+	} else {
+		stmotor_go_to(0);
+	}
+
+	/* We should never reach the 0 */
+	if (stmotor->abs_position == 0)
+		disaster();
+
+	bottom_calibrate();
+}
+
+void stm_go_to_top(void)
+{
+	stmotor_go_to(CAL_MAXSTEPS);
+	stmotor_exit_from_switch();
+
+	/* if bottom is calibrated then set the top value */
+	if (!(stmotor->flags & _BV(STM_CLB_BOTTOM))) {
+		stmotor->top=stmotor->abs_position;
+		/* Clear the top calibrate bit from flags */
+		stmotor->flags &= ~_BV(STM_CLB_TOP);
+	}
+}
+
+void calibrate_bottom_and_top(void)
+{
+	stm_go_to_bottom();
+	stm_go_to_top();
+}
+
+/* Set the level of the mat and calculate the low, mid and high
+   point of the launcher */
+
+uint8_t calibrate_zero(void)
+{
+	calibrate_bottom_and_top();
+	stmotor_slow_check_zero();
+	stmotor->zero=stmotor->abs_position;
+	stmotor_set_levels_of_the_T();
+
+	if (stmotor->high_level < stmotor->top) {
+		stmotor->flags = 0;
+		eeprom_write_word(&EE_zero_level, stmotor->zero);
+		eeprom_write_byte(&EE_calibrated, 71);
+		return(1); /* ok */
+	} else {
+		return(0); /* calibration invalid */
+	}
+}
+
+void check_and_recalibrate(void)
+{
+	if (sw_user_recalibration())
+		calibrate_zero();
+}
+
+void startup_check_switches(void)
+{
+	if (sw_hit()) {
+		if (sw_hit_bottom()) {
+			bottom_calibrate();
+		} else {
+			stmotor_exit_from_switch();
+		}
+	}
+}
+
+void startup_check_T(void) {
+	if (sw_ball_on_the_T()) {
+		stm_go_to_top();
+		wait_until_ball_is_gone();
+	}
+}
+
+void calibrate_init(void)
+{
+	uint8_t calibrated;
+
+	calibrated = eeprom_read_byte(&EE_calibrated);
+	startup_check_switches();
+	startup_check_T();
+
+	if (calibrated == 71)
+		if (sw_user_recalibration())
+			calibrated = 0;
+
+	/* if uncalibrated */
+	while (calibrated != 71) {
+		/* wait for user switch and calibrate zero */
+		while (!sw_user_switch()) {
+			led_blink(2,2);
+			_delay_ms(1000);
+		}
+
+		if (calibrate_zero()) {
+			calibrated = 71;
+			led_ctrl(0,1); /* green on */
+		}
+	}
+
+	/* if bottom or top has to be calibrated */
+	if (stmotor->flags & _BV(STM_CLB_BOTTOM) || stmotor->flags & _BV(STM_CLB_TOP))
+	calibrate_bottom_and_top();
+}
+
+void stm_init(void)
 {
 	engine_init();
 	stmotor->flags = _BV(STM_CLB_BOTTOM) | _BV(STM_CLB_TOP);
@@ -342,5 +469,6 @@ void stmotor_init(void)
 	TIMSK = _BV(OCIE0);
 
 	/* should calibrate */
+	calibrate_init();
 }
 

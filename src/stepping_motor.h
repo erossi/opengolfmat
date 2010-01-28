@@ -52,6 +52,14 @@ Set the prescaler used for the timer.
 /* steps between level of the T */
 #define STM_STEPS_BETWEEN_LEVELS 1000
 
+/* Number of steps to go backward when we hit a switch */
+/* Must be less than COUNTER_STARTSTOP_STEPS */
+#define CAL_BACKSTEPS 100
+
+/* Maximum number of steps */
+/* Should be > of STM_CRASH_STEPS */
+#define CAL_MAXSTEPS 25000
+
 struct stmotor_t {
 	/* bit flags */
 	volatile uint8_t flags;
@@ -85,9 +93,10 @@ void disaster(void);
 void stmotor_exit_from_switch(void);
 void stmotor_slow_check_zero(void);
 void stmotor_go_to(const int abs_position);
-void stmotor_go_to_level(void);
+void stm_go_to_level(void);
+void stm_go_to_bottom(void);
 void stmotor_set_levels_of_the_T(void);
 void stmotor_set_next_level_of_the_T(void);
-void stmotor_init(void);
+void stm_init(void);
 
 #endif
