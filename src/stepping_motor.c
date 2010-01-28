@@ -18,7 +18,7 @@
    Enrico Rossi <e.rossi@tecnobrain.com>
  */
 
-#include <inttypes.h>
+#include <stdint.h>
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
 #include <util/delay.h>

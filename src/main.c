@@ -18,7 +18,7 @@
    Enrico Rossi <e.rossi@tecnobrain.com>
  */
 
-#include <inttypes.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -32,7 +32,7 @@
 #include "shaker.h"
 
 struct stmotor_t *stmotor;
-unsigned int EEMEM EE_zero_level;
+uint16_t EEMEM EE_zero_level;
 uint8_t EEMEM EE_calibrated;
 uint8_t EEMEM EE_disaster;
 

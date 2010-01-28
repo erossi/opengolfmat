@@ -18,7 +18,7 @@
    Enrico Rossi <e.rossi@tecnobrain.com>
  */
 
-#include <inttypes.h>
+#include <stdint.h>
 #include <avr/eeprom.h>
 #include <util/delay.h>
 #include "switch.h"
@@ -31,7 +31,7 @@
 /* inside the ISR routine */
 
 extern struct stmotor_t *stmotor;
-extern unsigned int EEMEM EE_zero_level;
+extern uint16_t EEMEM EE_zero_level;
 extern uint8_t EEMEM EE_calibrated;
 
 /* set calibrate bottom or top bit to 0 (FALSE) */

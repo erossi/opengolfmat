@@ -68,7 +68,8 @@ struct stmotor_t {
 	/* counter after calibration */
 	/* zero - the level of the mat */
 	/* top - the level when hits the top switch */
-	unsigned int zero, top;
+	uint16_t zero;
+	unsigned int top;
 
 	/* levels ready for the player */
 	unsigned int low_level, mid_level, high_level;
