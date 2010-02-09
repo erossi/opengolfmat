@@ -32,7 +32,7 @@
 
 void engine_start(void);
 void engine_stop(void);
-void engine_set_direction(const unsigned short int updown);
+void engine_set_direction(const uint8_t updown);
 void engine_init(void);
 
 #endif

@@ -24,7 +24,7 @@
 
 /* 1 shake, 0 stop, other shake 1 sec
    pin logic is revesed */
-void shake_it(const unsigned short int cmd) {
+void shake_it(const uint8_t cmd) {
 	switch (cmd) {
 		case 0:	SHAKE_PORT &= ~_BV(SHAKE_PIN);
 			break;
@@ -40,7 +40,7 @@ void shake_it(const unsigned short int cmd) {
 
 /* 1 led on, 0 led off */
 /*
-void cmdout_led_ok(const unsigned short int cmd) {
+void cmdout_led_ok(const uint8_t cmd) {
 	if (cmd)
 		CMDOUT_PORT |= _BV(CMDOUT_LED_OK);
 	else
@@ -50,7 +50,7 @@ void cmdout_led_ok(const unsigned short int cmd) {
 
 /* 1 led on, 0 led off */
 /*
-void cmdout_led_allarm(const unsigned short int cmd) {
+void cmdout_led_allarm(const uint8_t cmd) {
 	if (cmd)
 		CMDOUT_PORT |= _BV(CMDOUT_LED_ALLARM);
 	else

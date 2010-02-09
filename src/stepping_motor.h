@@ -86,7 +86,7 @@ struct stmotor_t {
 	unsigned int player_level;
 
 	/* levels 0 low, 1 mid, 2 high, 3 max, 4 player */
-	unsigned short int level;
+	uint8_t level;
 };
 
 void disaster(void);

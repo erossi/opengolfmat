@@ -31,7 +31,7 @@
 #define CMDOUT_LED_ALLARM 7
 */
 
-void shake_it(const unsigned short int cmd);
+void shake_it(const uint8_t cmd);
 void shake_init(void);
 
 #endif

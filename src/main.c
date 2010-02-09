@@ -53,7 +53,7 @@ void check_for_disaster(void)
 }
 
 void wait_for_the_strike(void) {
-	unsigned short int i;
+	uint8_t i;
 
 	i=2;
 
