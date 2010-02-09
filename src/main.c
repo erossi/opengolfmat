@@ -61,7 +61,7 @@ void park_the_T(void) {
 }
 
 void wait_for_the_strike(void) {
-	unsigned short int i;
+	uint8_t i;
 
 	i=2;
 

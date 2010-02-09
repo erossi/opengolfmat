@@ -106,7 +106,7 @@ ISR(INT0_vect)
 	set_allarm_irq(0); /* disable myself */
 }
 
-unsigned short int allarm_hit_limit(void)
+uint8_t allarm_hit_limit(void)
 {
 	if (sw_hit() || (stmotor->flags & _BV(STM_ALLARM)))
 		return(1);
@@ -153,7 +153,7 @@ void loop_until_counter_match(uint8_t ntimes)
 }
 
 /* 1 up, 0 down */
-void set_direction(const unsigned short int dir)
+void set_direction(const uint8_t dir)
 {
 	if (dir)
 		stmotor->flags |= _BV(STM_UPDOWN); /* go up */

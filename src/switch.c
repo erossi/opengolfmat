@@ -24,7 +24,7 @@
 
 /* Reverse logic, see electrical chart */
 /* GND means switch has been hit */
-unsigned short int sw_hit_top(void)
+uint8_t sw_hit_top(void)
 {
 	if (SW_PIN & _BV(SW_PIN_TOP))
 		return(0);
@@ -32,7 +32,7 @@ unsigned short int sw_hit_top(void)
 		return(1);
 }
 
-unsigned short int sw_hit_bottom(void)
+uint8_t sw_hit_bottom(void)
 {
 	if (SW_PIN & _BV(SW_PIN_BOTTOM))
 		return(0);
@@ -40,12 +40,12 @@ unsigned short int sw_hit_bottom(void)
 		return(1);
 }
 
-unsigned short int sw_hit(void)
+uint8_t sw_hit(void)
 {
 	return(sw_hit_bottom() | sw_hit_top());
 }
 
-unsigned short int sw_ball_on_the_loader(void)
+uint8_t sw_ball_on_the_loader(void)
 {
 	if (SW_PIN & _BV(SW_PIN_LOADER))
 		return(1);
@@ -54,7 +54,7 @@ unsigned short int sw_ball_on_the_loader(void)
 }
 
 /* Ball on the launcher */
-unsigned short int sw_ball_on_the_T(void)
+uint8_t sw_ball_on_the_T(void)
 {
 	if (SW_PIN & _BV(SW_PIN_BALLOK))
 		return(1);
@@ -62,7 +62,7 @@ unsigned short int sw_ball_on_the_T(void)
 		return(0);
 }
 
-unsigned short int sw_user_switch(void)
+uint8_t sw_user_switch(void)
 {
 	if (SW_PIN & _BV(SW_PIN_USERMODE))
 		return(1);
@@ -70,7 +70,7 @@ unsigned short int sw_user_switch(void)
 		return(0);
 }
 
-unsigned short int sw_check_flags(void)
+uint8_t sw_check_flags(void)
 {
 	if (sw_hit_top() || sw_hit_bottom() || sw_ball_on_the_loader() || sw_ball_on_the_T() || sw_user_switch())
 		return(1);

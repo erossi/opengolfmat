@@ -34,14 +34,14 @@
 /* time to keep user switch closed to recalibrate in sec */
 #define SW_RECALIBRATE_TIMEOUT 10
 
-unsigned short int sw_hit_top(void);
-unsigned short int sw_hit_bottom(void);
-unsigned short int sw_hit(void);
-unsigned short int sw_ball_on_the_loader(void);
-unsigned short int sw_ball_on_the_T(void);
-unsigned short int sw_user_switch(void);
+uint8_t sw_hit_top(void);
+uint8_t sw_hit_bottom(void);
+uint8_t sw_hit(void);
+uint8_t sw_ball_on_the_loader(void);
+uint8_t sw_ball_on_the_T(void);
+uint8_t sw_user_switch(void);
 uint8_t sw_user_recalibration(void);
-unsigned short int sw_check_flags(void);
+uint8_t sw_check_flags(void);
 void sw_init(void);
 
 #endif

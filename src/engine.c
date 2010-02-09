@@ -44,7 +44,7 @@ void engine_stop(void) {
 }
 */
 
-void engine_set_direction(const unsigned short int updown) {
+void engine_set_direction(const uint8_t updown) {
 	if (updown)
 		STM_CTRL_PORT |= _BV(STM_PIN_UPDOWN); /* up */
 	else
