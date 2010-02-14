@@ -26,56 +26,37 @@
 /* GND means switch has been hit */
 uint8_t sw_hit_top(void)
 {
-	if (SW_PIN & _BV(SW_PIN_TOP))
-		return(0);
-	else
-		return(1);
+	return (!(SW_PIN & _BV(SW_PIN_TOP)));
 }
 
 uint8_t sw_hit_bottom(void)
 {
-	if (SW_PIN & _BV(SW_PIN_BOTTOM))
-		return(0);
-	else
-		return(1);
+	return (!(SW_PIN & _BV(SW_PIN_BOTTOM)));
 }
 
 uint8_t sw_hit(void)
 {
-	return(sw_hit_bottom() | sw_hit_top());
+	return (sw_hit_bottom() || sw_hit_top());
 }
 
 uint8_t sw_ball_in_the_loader(void)
 {
-	if (SW_PIN & _BV(SW_PIN_LOADER))
-		return(0);
-	else
-		return(1);
+	return (!(SW_PIN & _BV(SW_PIN_LOADER)));
 }
 
-/* Ball on the launcher */
 uint8_t sw_ball_on_the_T(void)
 {
-	if (SW_PIN & _BV(SW_PIN_BALLOK))
-		return(1);
-	else
-		return(0);
+	return ((SW_PIN & _BV(SW_PIN_BALLOK)));
 }
 
 uint8_t sw_user_switch(void)
 {
-	if (SW_PIN & _BV(SW_PIN_USERMODE))
-		return(1);
-	else
-		return(0);
+	return ((SW_PIN & _BV(SW_PIN_USERMODE)));
 }
 
 uint8_t sw_check_flags(void)
 {
-	if (sw_hit_top() || sw_hit_bottom() || sw_ball_in_the_loader() || sw_ball_on_the_T() || sw_user_switch())
-		return(1);
-	else
-		return(0);
+	return ((sw_hit_top() || sw_hit_bottom() || sw_ball_in_the_loader() || sw_ball_on_the_T() || sw_user_switch()));
 }
 
 /* true if user switch is pressed more than 10 (SW_RECAL_TMOUT) sec. */
