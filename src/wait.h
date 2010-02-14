@@ -25,7 +25,7 @@
 #define WAIT_LOADER 100
 #define WAIT_GONE 100
 
-void wait_until_ball_on_the_loader(void);
+void wait_until_ball_in_the_loader(void);
 void wait_until_ball_on_the_T(void);
 void wait_until_ball_is_gone(void);
 

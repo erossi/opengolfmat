@@ -37,7 +37,7 @@
 uint8_t sw_hit_top(void);
 uint8_t sw_hit_bottom(void);
 uint8_t sw_hit(void);
-uint8_t sw_ball_on_the_loader(void);
+uint8_t sw_ball_in_the_loader(void);
 uint8_t sw_ball_on_the_T(void);
 uint8_t sw_user_switch(void);
 uint8_t sw_user_recalibration(void);

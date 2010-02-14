@@ -348,7 +348,7 @@ void stm_go_to_bottom(void)
 
 	/* you MUST select the case before going to 0
 	   ball on the loader can not be true near 0 */
-	if (sw_ball_on_the_loader()) {
+	if (sw_ball_in_the_loader()) {
 		stmotor_go_to(0);
 		wait_until_ball_on_the_T();
 	} else {
@@ -378,7 +378,7 @@ void stm_go_to_top(void)
 void stm_park_the_T(void)
 {
 	/* parking the T on zero if no ball on the loader */
-	if (!sw_ball_on_the_loader() && (stmotor->abs_position != stmotor->zero) && !sw_ball_on_the_T()) {
+	if (!sw_ball_in_the_loader() && (stmotor->abs_position != stmotor->zero) && !sw_ball_on_the_T()) {
 		stmotor_go_to(stmotor->zero);
 	}
 }

@@ -45,12 +45,12 @@ uint8_t sw_hit(void)
 	return(sw_hit_bottom() | sw_hit_top());
 }
 
-uint8_t sw_ball_on_the_loader(void)
+uint8_t sw_ball_in_the_loader(void)
 {
 	if (SW_PIN & _BV(SW_PIN_LOADER))
-		return(1);
-	else
 		return(0);
+	else
+		return(1);
 }
 
 /* Ball on the launcher */
@@ -72,7 +72,7 @@ uint8_t sw_user_switch(void)
 
 uint8_t sw_check_flags(void)
 {
-	if (sw_hit_top() || sw_hit_bottom() || sw_ball_on_the_loader() || sw_ball_on_the_T() || sw_user_switch())
+	if (sw_hit_top() || sw_hit_bottom() || sw_ball_in_the_loader() || sw_ball_on_the_T() || sw_user_switch())
 		return(1);
 	else
 		return(0);

@@ -25,12 +25,12 @@
 #include "utils.h"
 #include "wait.h"
 
-void wait_until_ball_on_the_loader(void)
+void wait_until_ball_in_the_loader(void)
 {
 	uint8_t i;
 
 	for (i=0; i<2; i++) {
-		while (!sw_ball_on_the_loader())
+		while (!sw_ball_in_the_loader())
 			if (sw_user_switch())
 				shake_it(2); /* shake 1 sec */
 			else 
