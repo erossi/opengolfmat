@@ -1,6 +1,6 @@
 /*
    This file is part of OpenGolfMat
-   Copyright (C) 2009-2010 Enrico Rossi
+   Copyright (C) 2009, 2010 Enrico Rossi
 
    OpenGolfMat is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,29 +18,17 @@
    Enrico Rossi <e.rossi@tecnobrain.com>
  */
 
-#include <avr/io.h>
-#include <util/delay.h>
-#include "shaker.h"
+#ifndef GATE_H
+#define GATE_H
 
-/* 1 shake, 0 stop, other shake 1 sec
-   pin logic is revesed */
-void shake_it(const uint8_t cmd) {
-	switch (cmd) {
-		case 0:	SHAKE_PORT &= ~_BV(SHAKE_PIN);
-			break;
-		case 1:	SHAKE_PORT |= _BV(SHAKE_PIN);
-			break;
-		default:
-			shake_it(1);
-			_delay_ms(1000);
-			shake_it(0);
-			break;
-	}
-}
+/* Control port and pinout */
+#define GATE_PORT PORTB
+#define GATE_DDR DDRB
+#define GATE_PIN 1
 
-void shake_init(void) {
-	SHAKE_PORT &= ~_BV(SHAKE_PIN);
-	SHAKE_DDR |= _BV(SHAKE_PIN);
-	shake_it(2);
-}
+void gate_open(void);
+void gate_close(void);
+void gate_init(void);
+
+#endif
 

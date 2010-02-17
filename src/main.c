@@ -96,9 +96,7 @@ int main (void) {
 	for (;;) {
 		stm_park_the_T();
 		wait_until_ball_in_the_loader();
-		stm_go_to_bottom();
-		wait_until_ball_on_the_T();
-		stm_go_to_level();
+		stm_reload();
 		wait_for_the_strike();
 	}
 

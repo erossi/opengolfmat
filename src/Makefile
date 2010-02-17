@@ -11,7 +11,7 @@ REMOVE = rm -f
 
 init_obj = init.o
 stmotor_obj = engine.o switch.o counter.o stepping_motor.o wait.o
-objects = $(stmotor_obj) utils.o shaker.o
+objects = $(stmotor_obj) utils.o shaker.o gate.o
 
 .PHONY: clean
 .SILENT: help

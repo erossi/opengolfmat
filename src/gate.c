@@ -1,6 +1,6 @@
 /*
    This file is part of OpenGolfMat
-   Copyright (C) 2009-2010 Enrico Rossi
+   Copyright (C) 2009, 2010 Enrico Rossi
 
    OpenGolfMat is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,48 +19,19 @@
  */
 
 #include <avr/io.h>
-#include <util/delay.h>
-#include "shaker.h"
-#include "switch.h"
-#include "utils.h"
-#include "wait.h"
+#include "gate.h"
 
-void wait_until_ball_in_the_loader(void)
-{
-	uint8_t i;
-
-	for (i=0; i<2; i++) {
-		while (!sw_ball_in_the_loader())
-			if (sw_user_switch())
-				shake_it(2); /* shake 1 sec */
-			else 
-				led_blink(1, 1); /* red led blink */
-
-		_delay_ms(WAIT_LOADER);
-	}
+/* 1 open, 0 close */
+void gate_open(void) {
+	GATE_PORT |= _BV(GATE_PIN);
 }
 
-void wait_until_ball_on_the_T(void)
-{
-	uint8_t i;
-
-	for (i=0; i<2; i++) {
-		while (!sw_ball_on_the_T())
-			_delay_ms(WAIT_T);
-
-		_delay_ms(WAIT_T);
-	}
+void gate_close(void) {
+	GATE_PORT &= ~_BV(GATE_PIN);
 }
 
-void wait_until_ball_is_gone(void)
-{
-	uint8_t i;
-
-	for (i=0; i<2; i++) {
-		while (sw_ball_on_the_T())
-			_delay_ms(WAIT_GONE);
-
-		_delay_ms(WAIT_GONE);
-	}
+void gate_init(void) {
+	GATE_PORT &= ~_BV(GATE_PIN);
+	GATE_DDR |= _BV(GATE_PIN);
 }
 

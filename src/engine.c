@@ -1,6 +1,6 @@
 /*
    This file is part of OpenGolfMat
-   Copyright (C) 2009 Enrico Rossi
+   Copyright (C) 2009-2010 Enrico Rossi
 
    OpenGolfMat is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -32,17 +32,6 @@ void engine_stop(void) {
 	_delay_ms(ENGINE_DELAY_MS);
 	STM_CTRL_PORT &= ~_BV(STM_PIN_ENABLE);
 }
-
-/* reverse logic: remove when the electronic has been fixed
-void engine_start(void) {
-	STM_CTRL_PORT &= ~_BV(STM_PIN_ENABLE);
-	_delay_ms(ENGINE_DELAY_MS);
-}
-void engine_stop(void) {
-	_delay_ms(ENGINE_DELAY_MS);
-	STM_CTRL_PORT |= _BV(STM_PIN_ENABLE);
-}
-*/
 
 void engine_set_direction(const uint8_t updown) {
 	if (updown)

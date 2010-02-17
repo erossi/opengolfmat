@@ -28,6 +28,7 @@
 #include "shaker.h"
 #include "utils.h"
 #include "wait.h"
+#include "gate.h"
 #include "stepping_motor.h"
 
 /* Global variable and pointer to be used */
@@ -117,6 +118,19 @@ uint8_t allarm_hit_limit(void)
 		return(0);
 }
 
+uint8_t load_ball(void)
+{
+	if (sw_ball_in_the_loader()) {
+		gate_open();
+		wait_until_ball_on_the_T();
+		gate_close();
+		return(1);
+	} else {
+		return(0);
+	}
+}
+
+/* should be removed */
 void intrastep_check(void)
 {
 	int i;
@@ -207,19 +221,25 @@ uint8_t run_for_x_steps(unsigned int steps)
 	if (!allarm_hit_limit()) {
 		stmotor->rel_position = 0;
 
-		while ((stmotor->rel_position < steps) && !allarm_hit_limit())
-			intrastep_check();
 		/*
 		while ((stmotor->rel_position < steps) && !allarm_hit_limit())
+			intrastep_check();
+		*/
+		while ((stmotor->rel_position < steps) && !allarm_hit_limit())
 			_delay_us(COUNTER_DELAY_LOOP);
-*/
+
 		update_abs_position();
 	}
 
 	return(allarm_hit_limit());
 }
 
-/* This move will NOT check for switches, use only for calibration */
+/*
+   This move will NOT check for switches, It will move the cursor for
+   exit from a switch hit situation like calibration.
+   As the switch open the cursor continues to move for an extra
+   steps to be sure we're out from the switch hit tollerance.
+ */
 void stmotor_exit_from_switch(void)
 {
 	/* use only in a switch hit case */
@@ -332,6 +352,14 @@ void stmotor_set_next_level_of_the_T(void)
 		stmotor->level = 0;
 }
 
+void stm_park_the_T(void)
+{
+	/* parking the T on zero if no ball in the loader */
+	if (!sw_ball_in_the_loader() && (stmotor->abs_position != stmotor->zero) && !sw_ball_on_the_T()) {
+		stmotor_go_to(stmotor->zero);
+	}
+}
+
 void bottom_calibrate(void)
 {
 	stmotor_exit_from_switch();
@@ -340,20 +368,22 @@ void bottom_calibrate(void)
 	stmotor->flags &= ~_BV(STM_CLB_BOTTOM);
 }
 
+void top_calibrate(void)
+{
+	stmotor_exit_from_switch();
+
+	/* if bottom is calibrated then set the top value */
+	if (!(stmotor->flags & _BV(STM_CLB_BOTTOM))) {
+		stmotor->top=stmotor->abs_position;
+		/* Clear the top calibrate bit from flags */
+		stmotor->flags &= ~_BV(STM_CLB_TOP);
+	}
+}
+
 void stm_go_to_bottom(void)
 {
-	/* if ball is on the T grave error */
-	wait_until_ball_is_gone();
 	stmotor->abs_position=CAL_MAXSTEPS;
-
-	/* you MUST select the case before going to 0
-	   ball on the loader can not be true near 0 */
-	if (sw_ball_in_the_loader()) {
-		stmotor_go_to(0);
-		wait_until_ball_on_the_T();
-	} else {
-		stmotor_go_to(0);
-	}
+	stmotor_go_to(0);
 
 	/* We should never reach the 0 */
 	if (stmotor->abs_position == 0)
@@ -365,21 +395,34 @@ void stm_go_to_bottom(void)
 void stm_go_to_top(void)
 {
 	stmotor_go_to(CAL_MAXSTEPS);
-	stmotor_exit_from_switch();
 
-	/* if bottom is calibrated then set the top value */
-	if (!(stmotor->flags & _BV(STM_CLB_BOTTOM))) {
-		stmotor->top=stmotor->abs_position;
-		/* Clear the top calibrate bit from flags */
-		stmotor->flags &= ~_BV(STM_CLB_TOP);
-	}
+	/* We should never reach the MAX */
+	if (stmotor->abs_position == CAL_MAXSTEPS)
+		disaster();
+
+	top_calibrate();
 }
 
-void stm_park_the_T(void)
+void stm_reload(void)
 {
-	/* parking the T on zero if no ball on the loader */
-	if (!sw_ball_in_the_loader() && (stmotor->abs_position != stmotor->zero) && !sw_ball_on_the_T()) {
-		stmotor_go_to(stmotor->zero);
+	/* prerequisite condition */
+	if (sw_ball_in_the_loader() && !sw_ball_on_the_T()) {
+		stm_go_to_bottom();
+
+		/* if the ball to be loaded isn't vanished */
+		if (sw_ball_in_the_loader()) {
+			/* and some idiot may have dropped
+			   a ball on the T */
+			if (!sw_ball_on_the_T())
+				load_ball();
+
+			stm_go_to_level();
+		} else {
+			if (sw_ball_on_the_T())
+				stm_go_to_level();
+			else
+				stm_park_the_T();
+		}
 	}
 }
 
@@ -391,7 +434,6 @@ void calibrate_bottom_and_top(void)
 
 /* Set the level of the mat and calculate the low, mid and high
    point of the launcher */
-
 uint8_t calibrate_zero(void)
 {
 	calibrate_bottom_and_top();
@@ -421,15 +463,8 @@ void startup_check_switches(void)
 		if (sw_hit_bottom()) {
 			bottom_calibrate();
 		} else {
-			stmotor_exit_from_switch();
+			top_calibrate(); /* just exit from switch */
 		}
-	}
-}
-
-void startup_check_T(void) {
-	if (sw_ball_on_the_T()) {
-		stm_go_to_top();
-		wait_until_ball_is_gone();
 	}
 }
 
@@ -439,7 +474,6 @@ void calibrate_init(void)
 
 	calibrated = eeprom_read_byte(&EE_calibrated);
 	startup_check_switches();
-	startup_check_T();
 
 	if (calibrated == 71)
 		if (sw_user_recalibration())
