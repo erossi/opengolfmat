@@ -1,6 +1,6 @@
 /*
    This file is part of OpenGolfMat
-   Copyright (C) 2009 Enrico Rossi
+   Copyright (C) 2009, 2010 Enrico Rossi
 
    OpenGolfMat is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,12 +24,7 @@
 /* Control port and pinout */
 #define SHAKE_PORT PORTB
 #define SHAKE_DDR DDRB
-#define SHAKE_PIN 2
-
-/*
-#define CMDOUT_LED_OK 6
-#define CMDOUT_LED_ALLARM 7
-*/
+#define SHAKE_PIN PB2
 
 void shake_it(const uint8_t cmd);
 void shake_init(void);

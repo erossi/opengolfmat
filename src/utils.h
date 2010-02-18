@@ -1,6 +1,6 @@
 /*
    This file is part of OpenGolfMat
-   Copyright (C) 2009 Enrico Rossi
+   Copyright (C) 2009, 2010 Enrico Rossi
 
    OpenGolfMat is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 
 #define UTILS_SWITCH_PORT PORTB
 #define UTILS_SWITCH_DDR DDRB
-#define UTILS_SWITCH_PIN PIN0
+#define UTILS_SWITCH_PIN PINB0
 #define LED_PORT PORTB
 #define LED_DDR DDRB
 #define LED_GREEN_PIN PB6

@@ -24,7 +24,7 @@
 /* Control port and pinout */
 #define GATE_PORT PORTB
 #define GATE_DDR DDRB
-#define GATE_PIN 1
+#define GATE_PIN PB1
 
 void gate_open(void);
 void gate_close(void);
