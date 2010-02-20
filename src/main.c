@@ -1,6 +1,6 @@
 /*
    This file is part of OpenGolfMat
-   Copyright (C) 2009-2010 Enrico Rossi
+   Copyright (C) 2009, 2010 Enrico Rossi
 
    OpenGolfMat is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -60,16 +60,18 @@ void wait_for_the_strike(void) {
 
 	while (i) {
 		if (sw_ball_on_the_T()) {
+			led_blink(0, 1); /* green led blink */
+
 			while (sw_user_switch()) {
 				stmotor_set_next_level_of_the_T();
 				stm_go_to_level();
+				/* may a blink be good ? */
 				_delay_ms(2000);
 			}
 		} else {
 			i--;
+			_delay_ms(100);
 		}
-
-		led_blink(0, 1); /* green led blink */
 	}
 
 	led_ctrl(0, 1); /* power on */
