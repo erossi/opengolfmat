@@ -1,6 +1,6 @@
 /*
    This file is part of OpenGolfMat
-   Copyright (C) 2009-2010 Enrico Rossi
+   Copyright (C) 2009, 2010 Enrico Rossi
 
    OpenGolfMat is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ Set the prescaler used for the timer.
 #define STM_CRASH_STEPS 20000
 
 /* Number of steps to exit backward from a switch hit condition */
-#define STM_EXIT_FROM_SWITCH_STEPS 200
+#define STM_EXIT_FROM_SWITCH_STEPS 100
 
 /* if exiting from switch should not require this number of steps */
 #define STM_EXIT_FROM_SWITCH_MAX_STEPS 500
