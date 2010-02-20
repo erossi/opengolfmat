@@ -29,6 +29,7 @@
 #include "stepping_motor.h"
 #include "utils.h"
 #include "shaker.h"
+#include "gate.h"
 
 struct stmotor_t *stmotor;
 uint16_t EEMEM EE_zero_level;
@@ -85,6 +86,7 @@ int main (void) {
 	sw_init();
 	util_init();
 	shake_init();
+	gate_init();
 	check_for_disaster();
 
 	sei();

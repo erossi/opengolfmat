@@ -501,7 +501,6 @@ void calibrate_init(void)
 void stm_init(void)
 {
 	engine_init();
-	gate_init();
 	stmotor->flags = _BV(STM_CLB_BOTTOM) | _BV(STM_CLB_TOP);
 	stmotor->abs_position = 0; /* It's not your duty */
 	stmotor->rel_position = 0;
